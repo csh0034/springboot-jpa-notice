@@ -14,11 +14,13 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(BusinessException.class)
     private ResponseEntity<?> businessExceptionHandler(BusinessException e) {
+        log.error(e.getMessage(), e);
         return null;
     }
 
     @ExceptionHandler(Exception.class)
     private ResponseEntity<?> exceptionHandler(BusinessException e) {
+        log.error(e.getMessage(), e);
         return null;
     }
 }
