@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    schema:
+    - classpath:db/1. schema.sql
+    data:
+    - classpath:db/2. data.sql
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    username: sa
+    password:
+    sql-script-encoding: UTF-8 
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+      file-size-threshold: 1MB
+ 
+logging:
+  pattern:
+    console: '%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%4line]){magenta} %clr(%-40.40logger{39}){cyan} %clr(:){red} %m%n%wEx'
+  level:
+    root: info
+    com.ask: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
