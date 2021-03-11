@@ -23,7 +23,6 @@ public class UserServiceTest {
     @Autowired UserRepository userRepository;
     @Autowired EntityManager em;
 
-
     @Test
     public void joinUser() {
         // GIVEN
