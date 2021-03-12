@@ -33,3 +33,7 @@ logging:
     com.ask: debug
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
+
+
+upload:
+  dir: /Users/ask/DEV/upload

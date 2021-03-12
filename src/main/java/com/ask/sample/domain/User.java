@@ -16,18 +16,20 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "comt_user")
+@Table(name = "tb_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User extends BaseEntity implements UserDetails {
 
+    private static final long serialVersionUID = -5694089828831086520L;
+
     @Id
     @GenericGenerator(
-        name = "userGrpIdGenerator",
+        name = "userIdGenerator",
         strategy = "com.ask.sample.util.IdGenerator",
         parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "user-")
     )
-    @GeneratedValue(generator = "userGrpIdGenerator")
+    @GeneratedValue(generator = "userIdGenerator")
     @Column(name = "user_id")
     private String id;
 
@@ -44,21 +46,6 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
 
     private boolean enabled;
-
-    public static User createUser(String loginId, String password, Role authority, String userNm) {
-        User user = new User();
-        user.loginId = loginId;
-        user.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(password);
-        user.authority = authority;
-        user.username = userNm;
-        user.enabled = true;
-        return user;
-    }
-
-    // 비지니스 로직
-    public void changePassword(String oldPassword, String newPassword) {
-        this.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(newPassword);
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,5 +65,20 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public static User createUser(String loginId, String password, Role authority, String userNm) {
+        User user = new User();
+        user.loginId = loginId;
+        user.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(password);
+        user.authority = authority;
+        user.username = userNm;
+        user.enabled = true;
+        return user;
+    }
+
+    // 비지니스 로직
+    public void changePassword(String oldPassword, String newPassword) {
+        this.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(newPassword);
     }
 }
