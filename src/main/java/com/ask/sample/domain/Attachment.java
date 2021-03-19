@@ -22,9 +22,9 @@ public class Attachment extends BaseEntity {
 
     @Id
     @GenericGenerator(
-            name = "attIdGenerator",
-            strategy = "com.ask.sample.util.IdGenerator",
-            parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "att-")
+        name = "attIdGenerator",
+        strategy = "com.ask.sample.util.IdGenerator",
+        parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "att-")
     )
     @GeneratedValue(generator = "attIdGenerator")
     @Column(name = "att_id")

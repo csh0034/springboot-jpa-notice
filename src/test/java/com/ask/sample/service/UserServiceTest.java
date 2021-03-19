@@ -26,7 +26,7 @@ public class UserServiceTest {
     @Test
     public void joinUser() {
         // GIVEN
-        User user = createUser();
+        User user = createTestUser();
 
         // WHEN
         String id = userService.join(user);
@@ -39,8 +39,8 @@ public class UserServiceTest {
     @Test
     public void throwDuplicateUser() throws Exception {
         // GIVEN
-        User user1 = createUser();
-        User user2 = createUser();
+        User user1 = createTestUser();
+        User user2 = createTestUser();
 
         // WHEN
         userService.join(user1);
@@ -49,7 +49,7 @@ public class UserServiceTest {
         assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> userService.join(user2));
     }
 
-    private User createUser() {
+    private User createTestUser() {
         return User.createUser("loginId1", "password1", Role.ROLE_USER, "userNm1");
     }
 }

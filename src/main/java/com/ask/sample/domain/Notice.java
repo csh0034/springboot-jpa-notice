@@ -15,7 +15,9 @@ import java.util.List;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "tb_notice")
+@Table(name = "tb_notice", indexes = {
+    @Index(name = "IDX_NOTICE_TITLE", columnList = "title")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Notice extends BaseEntity {
@@ -24,9 +26,9 @@ public class Notice extends BaseEntity {
 
     @Id
     @GenericGenerator(
-            name = "noticeIdGenerator",
-            strategy = "com.ask.sample.util.IdGenerator",
-            parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "notice-")
+        name = "noticeIdGenerator",
+        strategy = "com.ask.sample.util.IdGenerator",
+        parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "notice-")
     )
     @GeneratedValue(generator = "noticeIdGenerator")
     @Column(name = "notice_id")
@@ -39,7 +41,6 @@ public class Notice extends BaseEntity {
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments = new ArrayList<>();
 
-    @Column(unique = true)
     private String title;
 
     @Lob
@@ -47,7 +48,7 @@ public class Notice extends BaseEntity {
 
     private long readCnt;
 
-    public void addAttach(Attachment attachment) {
+    public void addAttachment(Attachment attachment) {
         attachments.add(attachment);
         attachment.setNotice(this);
     }
@@ -59,7 +60,7 @@ public class Notice extends BaseEntity {
         notice.content = content;
         notice.readCnt = 0;
         for (Attachment attachment : attachments) {
-            notice.addAttach(attachment);
+            notice.addAttachment(attachment);
         }
         return notice;
     }

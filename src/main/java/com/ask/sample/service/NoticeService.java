@@ -27,7 +27,7 @@ public class NoticeService {
 
     @Transactional
     public String save(String userId, String title, String content, MultipartFile... multipartFiles) {
-        User user = userRepository.findByUserIdAndEnabledIsTrue(userId).orElseThrow(() -> new IllegalStateException("user null"));
+        User user = userRepository.findByIdAndEnabledIsTrue(userId).orElseThrow(() -> new IllegalStateException("user null"));
 
         List<Attachment> attachments = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
