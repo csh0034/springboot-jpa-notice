@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import java.util.Arrays;
 
@@ -15,16 +16,17 @@ public class LoggerAspect {
 
 	@Around("execution(* com.ask.sample.service.*.*(..))")
 	public Object timeLog(ProceedingJoinPoint pjp) throws Throwable {
-		long startTime = System.currentTimeMillis();
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 
-		log.info("1: " + Arrays.toString(pjp.getArgs()));
-		log.info("2: " + pjp.getSignature().getName());
+		log.info("1. args: " + Arrays.toString(pjp.getArgs()));
+		log.info("2. name: " + pjp.getSignature().getName());
 
 		Object result = pjp.proceed();
 
-		long endTime = System.currentTimeMillis();
-		log.info(pjp.getSignature().getName() + " - 메서드 실행시간 : " + (endTime - startTime) + " ms");
+		stopWatch.stop();
 
+		log.info(pjp.getSignature().getName() + " - method time : " + stopWatch.getTotalTimeMillis() + " ms");
 		return result;
 	}
 }

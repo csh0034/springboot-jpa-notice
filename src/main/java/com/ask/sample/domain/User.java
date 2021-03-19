@@ -2,9 +2,7 @@ package com.ask.sample.domain;
 
 import com.ask.sample.constant.Role;
 import com.ask.sample.util.IdGenerator;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +17,7 @@ import java.util.Collection;
 @Table(name = "tb_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 public class User extends BaseEntity implements UserDetails {
 
     private static final long serialVersionUID = -5694089828831086520L;
