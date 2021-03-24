@@ -46,6 +46,15 @@ public class User extends BaseEntity implements UserDetails {
 
     private boolean enabled;
 
+    @Transient
+    private boolean accountNonExpired;
+
+    @Transient
+    private boolean accountNonLocked;
+
+    @Transient
+    private boolean credentialsNonExpired;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList(authority.name());
@@ -53,17 +62,17 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return this.credentialsNonExpired;
     }
 
     public static User createUser(String loginId, String password, Role authority, String userNm) {
@@ -73,6 +82,12 @@ public class User extends BaseEntity implements UserDetails {
         user.authority = authority;
         user.username = userNm;
         user.enabled = true;
+
+        // Not Use Field
+        user.accountNonLocked = true;
+        user.accountNonLocked = true;
+        user.credentialsNonExpired = true;
+
         return user;
     }
 

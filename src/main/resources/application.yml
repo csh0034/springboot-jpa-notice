@@ -5,7 +5,7 @@ spring:
     data:
     - classpath:db/2. data.sql
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
     sql-script-encoding: UTF-8 

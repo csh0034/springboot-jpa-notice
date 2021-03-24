@@ -37,7 +37,7 @@ public class NoticeService {
             attachments.add(Attachment.createAttachment(multipartFile));
         }
 
-        Notice notice = Notice.createNotice(user, title, content, attachments.toArray(new Attachment[0]));
+        Notice notice = Notice.createNotice(user, title, content, attachments);
 
         noticeRepository.save(notice);
 

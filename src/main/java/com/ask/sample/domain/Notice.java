@@ -53,7 +53,7 @@ public class Notice extends BaseEntity {
         attachment.setNotice(this);
     }
 
-    public static Notice createNotice(User user, String title, String content, Attachment... attachments) {
+    public static Notice createNotice(User user, String title, String content, List<Attachment> attachments) {
         Notice notice = new Notice();
         notice.user = user;
         notice.title = title;

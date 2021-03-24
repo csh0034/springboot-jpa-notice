@@ -1,26 +1,36 @@
 package com.ask.sample.advice;
 
+import com.ask.sample.advice.exception.BindingException;
 import com.ask.sample.advice.exception.BusinessException;
-import lombok.RequiredArgsConstructor;
+import com.ask.sample.vo.response.ExceptionResponseVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class ExceptionAdvice {
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ExceptionResponseVO BusinessExceptionHandler(MethodArgumentNotValidException bindingException) {
+        printLog(bindingException);
+        return ExceptionResponseVO.convert(bindingException);
+    }
+
     @ExceptionHandler(BusinessException.class)
-    private ResponseEntity<?> businessExceptionHandler(BusinessException e) {
-        log.error(e.getMessage(), e);
-        return null;
+    public ExceptionResponseVO businessExceptionHandler(BusinessException businessException) {
+        printLog(businessException);
+        return ExceptionResponseVO.convert(businessException);
     }
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<?> exceptionHandler(BusinessException e) {
-        log.error(e.getMessage(), e);
-        return null;
+    public ExceptionResponseVO exceptionHandler(Exception exception) {
+        printLog(exception);
+        return ExceptionResponseVO.convert(exception);
+    }
+
+    private void printLog(Exception e) {
+        log.error(e.getClass().getSimpleName(), e);
     }
 }

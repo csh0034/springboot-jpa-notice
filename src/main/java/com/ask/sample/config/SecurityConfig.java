@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
-            .headers().frameOptions().disable()
+            .headers().frameOptions().sameOrigin()
             .and().authorizeRequests()
                 .antMatchers("/svc/**").hasRole("USER")
                 .anyRequest().permitAll();
