@@ -1,55 +1,81 @@
 package com.ask.sample.vo.response;
 
-import com.ask.sample.advice.exception.BindingException;
-import com.ask.sample.advice.exception.BusinessException;
-import com.ask.sample.constant.Code;
+import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.ErrorCode;
+import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.validation.BindingResult;
 
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PROTECTED;
 
-@Data
-@AllArgsConstructor
+@Getter
+@NoArgsConstructor(access = PROTECTED)
 public class ExceptionResponseVO {
 
-    private Date timestamp;
+    private String timestamp;
 
     private String code;
 
     private String message;
 
     @JsonInclude(value = Include.NON_NULL)
-    private List<ResponseField> result;
+    private List<FieldError> errors;
 
-    public static ExceptionResponseVO convert(BindingException e) {
-        return new ExceptionResponseVO(new Date(), e.getCode(), e.getMessage(), e.getResponseMessages());
+    private ExceptionResponseVO(ErrorCode errorCode, List<FieldError> errors) {
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
+        this.errors = errors;
     }
 
-    public static ExceptionResponseVO convert(BusinessException e) {
-        return new ExceptionResponseVO(new Date(), e.getCode(), e.getMessage(), null);
+    private ExceptionResponseVO(ErrorCode errorCode) {
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
     }
 
-    public static ExceptionResponseVO convert(Exception e) {
-        return new ExceptionResponseVO(new Date(), Code.SERVER_EXCEPTION, e.getMessage(), null);
+    public static ExceptionResponseVO of(ErrorCode errorCode, BindingResult bindingResult) {
+        return new ExceptionResponseVO(errorCode, FieldError.of(bindingResult));
+    }
+
+    public static ExceptionResponseVO of(ErrorCode errorCode) {
+        return new ExceptionResponseVO(errorCode);
+    }
+
+    public static ExceptionResponseVO of(ErrorCode errorCode, List<FieldError> errors) {
+        return new ExceptionResponseVO(errorCode, errors);
     }
 
     @Getter
-    @AllArgsConstructor(access = PRIVATE)
-    public static class ResponseField {
+    @NoArgsConstructor(access = PROTECTED)
+    public static class FieldError {
         private String field;
+        private String value;
         private String reason;
 
-        public static ResponseField create(String reason) {
-            return new ResponseField(null, reason);
+        private FieldError(String field, String value, String reason) {
+            this.field = field;
+            this.value = value;
+            this.reason = reason;
         }
-        public static ResponseField create(String field, String reason) {
-            return new ResponseField(field, reason);
+
+        public static FieldError of(String field, String value, String reason) {
+            return new FieldError(field, value, reason);
+        }
+
+        public static List<FieldError> of(BindingResult bindingResult) {
+            return bindingResult.getFieldErrors().stream()
+                    .map(error -> new FieldError(
+                            error.getField(),
+                            error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
+                            error.getDefaultMessage()))
+                    .collect(Collectors.toList());
         }
     }
 }

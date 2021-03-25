@@ -24,7 +24,12 @@ spring:
       max-file-size: -1
       max-request-size: -1
       file-size-threshold: 1MB
- 
+
+server:
+  servlet:
+    encoding:
+      force-response: true
+
 logging:
   pattern:
     console: '%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%4line]){magenta} %clr(%-40.40logger{39}){cyan} %clr(:){red} %m%n%wEx'
@@ -33,7 +38,6 @@ logging:
     com.ask: debug
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
-
 
 upload:
   dir: /Users/ask/DEV/upload

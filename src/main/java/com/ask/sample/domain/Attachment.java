@@ -1,7 +1,6 @@
 package com.ask.sample.domain;
 
 import com.ask.sample.util.IdGenerator;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,10 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Table(name = "tb_attachment")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class Attachment extends BaseEntity {
 

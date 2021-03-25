@@ -1,16 +1,19 @@
 package com.ask.sample.advice.exception;
 
+import com.ask.sample.constant.ErrorCode;
+
 public abstract class BusinessException extends RuntimeException {
 
     private static final long serialVersionUID = 3166170761941160124L;
 
-    public BusinessException() {
-        super();
-    }
+    private ErrorCode errorCode;
 
-    public BusinessException(String message) {
+    public BusinessException(String message, ErrorCode errorCode) {
         super(message);
+        this.errorCode = errorCode;
     }
 
-    public abstract String getCode();
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
 }

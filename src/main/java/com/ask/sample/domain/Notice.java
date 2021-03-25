@@ -1,24 +1,23 @@
 package com.ask.sample.domain;
 
 import com.ask.sample.util.IdGenerator;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Table(name = "tb_notice", indexes = {
     @Index(name = "IDX_NOTICE_TITLE", columnList = "title")
 })
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class Notice extends BaseEntity {
 

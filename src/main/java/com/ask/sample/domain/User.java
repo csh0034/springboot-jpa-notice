@@ -13,9 +13,11 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import javax.persistence.*;
 import java.util.Collection;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Table(name = "tb_user")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 @ToString
 public class User extends BaseEntity implements UserDetails {
@@ -91,7 +93,6 @@ public class User extends BaseEntity implements UserDetails {
         return user;
     }
 
-    // 비지니스 로직
     public void changePassword(String oldPassword, String newPassword) {
         this.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(newPassword);
     }
