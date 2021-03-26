@@ -1,7 +1,8 @@
 package com.ask.sample.controller;
 
 import com.ask.sample.advice.exception.InvalidationException;
-import com.ask.sample.advice.exception.ServerException;
+import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.constant.ErrorCode;
 import com.ask.sample.vo.request.NoticeRequestVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -46,6 +47,11 @@ public class TestController {
 
     @GetMapping("/error4")
     public void error4() {
-        throw new ServerException("abc");
+        throw new BusinessException("error4");
+    }
+
+    @GetMapping("/error5")
+    public void error5() {
+        throw new BusinessException("error5", ErrorCode.ENTITY_NOT_FOUND);
     }
 }

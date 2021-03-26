@@ -1,6 +1,6 @@
 package com.ask.sample.advice;
 
-import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.advice.exception.BaseException;
 import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.config.SettingProperties;
 import com.ask.sample.constant.ErrorCode;
@@ -10,18 +10,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -49,8 +46,8 @@ public class ExceptionAdvice {
         return getModelAndView(responseVO, errorCode.getStatus());
     }
 
-    @ExceptionHandler(BusinessException.class)
-    public ModelAndView handleBusinessException(BusinessException e) {
+    @ExceptionHandler(BaseException.class)
+    public ModelAndView handleBusinessException(BaseException e) {
         log.error("handleBusinessExceptionHandler", e);
         ErrorCode errorCode = e.getErrorCode();
         ExceptionResponseVO responseVO = ExceptionResponseVO.of(errorCode);
@@ -65,7 +62,6 @@ public class ExceptionAdvice {
     }
 
     private ModelAndView getModelAndView(ExceptionResponseVO responseVO, HttpStatus status) {
-
         if (StringUtils.containsAny(request.getHeader(HttpHeaders.ACCEPT), MediaType.TEXT_HTML_VALUE, MediaType.ALL_VALUE)) {
             return new ModelAndView(
                 settingProperties.getCommonErrorPage(),

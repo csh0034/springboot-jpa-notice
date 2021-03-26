@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvalidationException extends BusinessException {
+public class InvalidationException extends BaseException {
 
     private static final long serialVersionUID = 7949500416132768977L;
 
