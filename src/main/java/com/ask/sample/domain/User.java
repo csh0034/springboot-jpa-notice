@@ -1,6 +1,7 @@
 package com.ask.sample.domain;
 
-import com.ask.sample.constant.Role;
+import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constant.Role;
 import com.ask.sample.util.IdGenerator;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

@@ -1,6 +1,7 @@
 package com.ask.sample.service;
 
-import com.ask.sample.constant.Role;
+import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constant.Role;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
 import org.junit.jupiter.api.Test;

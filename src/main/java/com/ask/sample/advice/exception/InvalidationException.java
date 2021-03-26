@@ -2,13 +2,11 @@ package com.ask.sample.advice.exception;
 
 import com.ask.sample.constant.ErrorCode;
 import com.ask.sample.vo.response.ExceptionResponseVO.FieldError;
-import lombok.Getter;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class InvalidationException extends BusinessException {
 
     private static final long serialVersionUID = 7949500416132768977L;
@@ -42,5 +40,12 @@ public class InvalidationException extends BusinessException {
 
     public int size() {
         return fieldErrors.size();
+    }
+
+    public List<FieldError> getFieldErrors() {
+        if (fieldErrors.isEmpty()) {
+            add(super.getMessage());
+        }
+        return fieldErrors;
     }
 }

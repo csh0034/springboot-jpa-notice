@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>Common Error Page</title>
+</head>
+ <body>
+     <div class="container">
+		 Common Error Page
+		 <ul>
+			 <li>timestamp : <span th:text="${timestamp}"></span></li>
+			 <li>code : <span th:text="${code}"></span></li>
+			 <li>message : <span th:text="${message}"></span></li>
+		 </ul>
+		 <div th:text="${fieldErrors}"></div>
+	</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.ask.sample.service;
 
+import com.ask.sample.config.SettingProperties;
 import com.ask.sample.domain.Attachment;
 import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
@@ -21,9 +22,7 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
-
-    @Value("${upload.dir}")
-    String uploadDir;
+    private final SettingProperties settingProperties;
 
     @Transactional
     public String save(String userId, String title, String content, MultipartFile... multipartFiles) {

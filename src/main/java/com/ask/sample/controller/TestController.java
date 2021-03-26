@@ -16,7 +16,7 @@ public class TestController {
 
     @GetMapping("/error1")
     public void error1() {
-        throw new InvalidationException();
+        throw new InvalidationException("메세세세세지지지지지지지지지지");
     }
 
     @GetMapping("/error2")

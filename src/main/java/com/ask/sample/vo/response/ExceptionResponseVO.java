@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@ToString
 @NoArgsConstructor(access = PROTECTED)
 public class ExceptionResponseVO {
 
@@ -25,13 +27,13 @@ public class ExceptionResponseVO {
     private String message;
 
     @JsonInclude(value = Include.NON_NULL)
-    private List<FieldError> errors;
+    private List<FieldError> fieldErrors;
 
-    private ExceptionResponseVO(ErrorCode errorCode, List<FieldError> errors) {
+    private ExceptionResponseVO(ErrorCode errorCode, List<FieldError> fieldErrors) {
         this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
-        this.errors = errors;
+        this.fieldErrors = fieldErrors;
     }
 
     private ExceptionResponseVO(ErrorCode errorCode) {
@@ -48,11 +50,12 @@ public class ExceptionResponseVO {
         return new ExceptionResponseVO(errorCode);
     }
 
-    public static ExceptionResponseVO of(ErrorCode errorCode, List<FieldError> errors) {
-        return new ExceptionResponseVO(errorCode, errors);
+    public static ExceptionResponseVO of(ErrorCode errorCode, List<FieldError> fieldErrors) {
+        return new ExceptionResponseVO(errorCode, fieldErrors);
     }
 
     @Getter
+    @ToString
     @NoArgsConstructor(access = PROTECTED)
     public static class FieldError {
         private String field;
