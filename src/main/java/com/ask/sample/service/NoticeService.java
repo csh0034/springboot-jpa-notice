@@ -6,8 +6,9 @@ import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.NoticeRepository;
 import com.ask.sample.repository.UserRepository;
+import com.ask.sample.util.FileUtils;
+import com.ask.sample.vo.request.NoticeRequestVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,18 +26,23 @@ public class NoticeService {
     private final SettingProperties settingProperties;
 
     @Transactional
-    public String save(String userId, String title, String content, MultipartFile... multipartFiles) {
+    public String add(String userId, NoticeRequestVO noticeRequestVO) {
         User user = userRepository.findByIdAndEnabledIsTrue(userId).orElseThrow(() -> new IllegalStateException("user null"));
 
         List<Attachment> attachments = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            if (multipartFile == null && multipartFile.isEmpty()) {
+        for (MultipartFile multipartFile : noticeRequestVO.getMultipartFiles()) {
+            if (multipartFile == null || multipartFile.isEmpty()) {
                 continue;
             }
-            attachments.add(Attachment.createAttachment(multipartFile));
+
+            Attachment attachment = Attachment.createAttachment(multipartFile, settingProperties.getUploadDir());
+
+            attachments.add(attachment);
+
+            FileUtils.upload(multipartFile, settingProperties.getUploadDir(), attachment.getSavedFileDir());
         }
 
-        Notice notice = Notice.createNotice(user, title, content, attachments);
+        Notice notice = Notice.createNotice(user, noticeRequestVO.getTitle(), noticeRequestVO.getContent(), attachments);
 
         noticeRepository.save(notice);
 

@@ -1,10 +1,8 @@
 package com.ask.sample.domain;
 
-import com.ask.sample.util.IdGenerator;
+import com.ask.sample.util.StringUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -21,12 +19,6 @@ public class Attachment extends BaseEntity {
     private static final long serialVersionUID = 6172416700186756912L;
 
     @Id
-    @GenericGenerator(
-        name = "attIdGenerator",
-        strategy = "com.ask.sample.util.IdGenerator",
-        parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "att-")
-    )
-    @GeneratedValue(generator = "attIdGenerator")
     @Column(name = "att_id")
     private String id;
 
@@ -42,18 +34,20 @@ public class Attachment extends BaseEntity {
 
     private long downloadCnt;
 
-    private String savedFilePath;
+    private String savedFileDir;
 
     public void setNotice(Notice notice) {
         this.notice = notice;
     }
 
-    public static Attachment createAttachment(MultipartFile multipartFile) {
+    public static Attachment createAttachment(MultipartFile multipartFile, String uploadDir) {
         Attachment attachment = new Attachment();
+        attachment.id = StringUtils.getNewId("att-");
         attachment.fileNm = multipartFile.getOriginalFilename();
         attachment.contentType = multipartFile.getContentType();
         attachment.fileSize = multipartFile.getSize();
         attachment.downloadCnt = 0;
+        attachment.savedFileDir = uploadDir + System.getProperty("file.separator") + attachment.id;
         return attachment;
     }
 }

@@ -87,7 +87,7 @@ public class User extends BaseEntity implements UserDetails {
         user.enabled = true;
 
         // Not Use Field
-        user.accountNonLocked = true;
+        user.accountNonExpired = true;
         user.accountNonLocked = true;
         user.credentialsNonExpired = true;
 

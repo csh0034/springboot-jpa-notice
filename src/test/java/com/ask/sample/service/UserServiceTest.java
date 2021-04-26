@@ -18,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @SpringBootTest
 @Transactional
 @WithMockUser(username = "testUser")
-public class UserServiceTest {
+class UserServiceTest {
 
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;
     @Autowired EntityManager em;
 
     @Test
-    public void joinUser() {
+    void joinUser() {
         // GIVEN
         User user = createTestUser();
 
@@ -38,7 +38,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void throwDuplicateUser() throws Exception {
+    void throwDuplicateUser() {
         // GIVEN
         User user1 = createTestUser();
         User user2 = createTestUser();

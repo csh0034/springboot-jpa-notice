@@ -12,13 +12,13 @@ import static com.ask.sample.constant.Constant.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired UserRepository userRepository;
     @Autowired EntityManager em;
 
     @Test
-    public void saveUser() {
+    void saveUser() {
         // GIVEN
         User user = User.createUser("loginId1", "password1", Role.ROLE_USER, "userNm1");
 

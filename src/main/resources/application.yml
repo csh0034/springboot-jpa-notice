@@ -40,5 +40,5 @@ logging:
     org.hibernate.type.descriptor.sql: trace
 
 setting:
-  upload-dir: /Users/ask/DEV/upload
+  upload-dir: ~/DEV/upload
   common-error-page: error/error

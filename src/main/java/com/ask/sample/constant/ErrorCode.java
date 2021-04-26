@@ -11,7 +11,7 @@ public enum ErrorCode {
     // EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "U001", "Email is Duplication"),
     // LOGIN_INPUT_INVALID(HttpStatus.BAD_REQUEST, "U002", "Login input is invalid");
 
-    private HttpStatus status;
+    private final HttpStatus status;
     private final String code;
     private final String message;
 

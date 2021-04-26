@@ -65,7 +65,8 @@ public class ExceptionAdvice {
         if (StringUtils.containsAny(request.getHeader(HttpHeaders.ACCEPT), MediaType.TEXT_HTML_VALUE, MediaType.ALL_VALUE)) {
             return new ModelAndView(
                 settingProperties.getCommonErrorPage(),
-                objectMapper.convertValue(responseVO, new TypeReference<Map<String, Object>>() {})
+                objectMapper.convertValue(responseVO, new TypeReference<Map<String, Object>>() {}),
+                status
             );
         }
 
