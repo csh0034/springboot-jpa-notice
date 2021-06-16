@@ -1,12 +1,19 @@
 package com.ask.sample.vo.response;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 public class CommonResponseVO<T> {
 
-    private Date timestamp;
+    private String timestamp;
 
-    private Integer status;
+    private int status;
 
     private T result;
 }

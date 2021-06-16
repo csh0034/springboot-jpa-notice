@@ -4,6 +4,9 @@ import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.advice.exception.BusinessException;
 import com.ask.sample.constant.ErrorCode;
 import com.ask.sample.vo.request.NoticeRequestVO;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,5 +56,11 @@ public class TestController {
     @GetMapping("/error5")
     public void error5() {
         throw new BusinessException("error5", ErrorCode.ENTITY_NOT_FOUND);
+    }
+
+    @GetMapping("/authenticated")
+    public void authentication() {
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        Authentication authentication = ctx.getAuthentication();
     }
 }

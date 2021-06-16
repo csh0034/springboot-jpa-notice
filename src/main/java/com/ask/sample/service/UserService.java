@@ -1,5 +1,6 @@
 package com.ask.sample.service;
 
+import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class UserService implements UserDetailsService {
     private void validateDuplicateMember(User user) {
         List<User> findUsers = userRepository.findAllByLoginId(user.getLoginId());
         if (!findUsers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new InvalidationException("이미 존재하는 회원입니다.");
         }
     }
 

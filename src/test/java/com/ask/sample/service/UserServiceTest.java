@@ -1,6 +1,6 @@
 package com.ask.sample.service;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.constant.Constant.Role;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
@@ -47,7 +47,7 @@ class UserServiceTest {
         userService.join(user1);
 
         // THEN
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> userService.join(user2));
+        assertThatExceptionOfType(InvalidationException.class).isThrownBy(() -> userService.join(user2));
     }
 
     private User createTestUser() {

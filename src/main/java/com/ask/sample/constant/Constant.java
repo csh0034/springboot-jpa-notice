@@ -1,7 +1,18 @@
 package com.ask.sample.constant;
 
-public class Constant {
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+public enum Constant {
+
+    DATE_FORMAT("yyyy-MM-dd HH:mm:ss");
+
+    private final String value;
+
+    Constant(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 
     public enum Role {
         ROLE_USER

@@ -1,5 +1,6 @@
 package com.ask.sample.service;
 
+import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.config.SettingProperties;
 import com.ask.sample.domain.Attachment;
 import com.ask.sample.domain.Notice;
@@ -27,7 +28,7 @@ public class NoticeService {
 
     @Transactional
     public String add(String userId, NoticeRequestVO noticeRequestVO) {
-        User user = userRepository.findByIdAndEnabledIsTrue(userId).orElseThrow(() -> new IllegalStateException("user null"));
+        User user = userRepository.findByIdAndEnabledIsTrue(userId).orElseThrow(() -> new InvalidationException("user null"));
 
         List<Attachment> attachments = new ArrayList<>();
         for (MultipartFile multipartFile : noticeRequestVO.getMultipartFiles()) {

@@ -30,14 +30,14 @@ public class ExceptionResponseVO {
     private List<FieldError> fieldErrors;
 
     private ExceptionResponseVO(ErrorCode errorCode, List<FieldError> fieldErrors) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
         this.fieldErrors = fieldErrors;
     }
 
     private ExceptionResponseVO(ErrorCode errorCode) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
     }
