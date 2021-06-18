@@ -1,0 +1,13 @@
+[cols="d,d,d,d,l"]
+|===
+|Path|Type|Required|Description|Validation
+
+{{#fields}}
+|{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
+|{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
+|{{#tableCellContent}}{{^optional}}true{{/optional}}{{/tableCellContent}}
+|{{#tableCellContent}}{{description}}{{/tableCellContent}}
+a|{{#tableCellContent}}{{#validation}}{{.}}{{/validation}}{{/tableCellContent}}
+
+{{/fields}}
+|===

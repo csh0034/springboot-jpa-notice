@@ -1,6 +1,6 @@
 package com.ask.sample.advice.exception;
 
-import com.ask.sample.constant.ErrorCode;
+import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.vo.response.ExceptionResponseVO.FieldError;
 import org.springframework.validation.BindingResult;
 
@@ -14,15 +14,15 @@ public class InvalidationException extends BaseException {
     private List<FieldError> fieldErrors = new ArrayList<>();
 
     public InvalidationException() {
-        super(ErrorCode.INVALID_INPUT_VALUE.getMessage(), ErrorCode.INVALID_INPUT_VALUE);
+        super(ResponseCode.INVALID_INPUT_VALUE.getMessage(), ResponseCode.INVALID_INPUT_VALUE);
     }
 
     public InvalidationException(String message) {
-        super(message, ErrorCode.INVALID_INPUT_VALUE);
+        super(message, ResponseCode.INVALID_INPUT_VALUE);
     }
 
     public InvalidationException(BindingResult bindingResult) {
-        super(ErrorCode.INVALID_INPUT_VALUE.getMessage(), ErrorCode.INVALID_INPUT_VALUE);
+        super(ResponseCode.INVALID_INPUT_VALUE.getMessage(), ResponseCode.INVALID_INPUT_VALUE);
         this.fieldErrors = FieldError.of(bindingResult);
     }
 

@@ -1,7 +1,7 @@
 package com.ask.sample.vo.response;
 
 import com.ask.sample.constant.Constant;
-import com.ask.sample.constant.ErrorCode;
+import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -29,29 +29,29 @@ public class ExceptionResponseVO {
     @JsonInclude(value = Include.NON_NULL)
     private List<FieldError> fieldErrors;
 
-    private ExceptionResponseVO(ErrorCode errorCode, List<FieldError> fieldErrors) {
+    private ExceptionResponseVO(ResponseCode responseCode, List<FieldError> fieldErrors) {
         this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
+        this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
         this.fieldErrors = fieldErrors;
     }
 
-    private ExceptionResponseVO(ErrorCode errorCode) {
+    private ExceptionResponseVO(ResponseCode responseCode) {
         this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
+        this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
     }
 
-    public static ExceptionResponseVO of(ErrorCode errorCode, BindingResult bindingResult) {
-        return new ExceptionResponseVO(errorCode, FieldError.of(bindingResult));
+    public static ExceptionResponseVO of(ResponseCode responseCode, BindingResult bindingResult) {
+        return new ExceptionResponseVO(responseCode, FieldError.of(bindingResult));
     }
 
-    public static ExceptionResponseVO of(ErrorCode errorCode) {
-        return new ExceptionResponseVO(errorCode);
+    public static ExceptionResponseVO of(ResponseCode responseCode) {
+        return new ExceptionResponseVO(responseCode);
     }
 
-    public static ExceptionResponseVO of(ErrorCode errorCode, List<FieldError> fieldErrors) {
-        return new ExceptionResponseVO(errorCode, fieldErrors);
+    public static ExceptionResponseVO of(ResponseCode responseCode, List<FieldError> fieldErrors) {
+        return new ExceptionResponseVO(responseCode, fieldErrors);
     }
 
     @Getter

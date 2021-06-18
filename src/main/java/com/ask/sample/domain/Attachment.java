@@ -30,9 +30,9 @@ public class Attachment extends BaseEntity {
 
     private String contentType;
 
-    private long fileSize;
+    private Long fileSize;
 
-    private long downloadCnt;
+    private Long downloadCnt;
 
     private String savedFileDir;
 
@@ -46,7 +46,7 @@ public class Attachment extends BaseEntity {
         attachment.fileNm = multipartFile.getOriginalFilename();
         attachment.contentType = multipartFile.getContentType();
         attachment.fileSize = multipartFile.getSize();
-        attachment.downloadCnt = 0;
+        attachment.downloadCnt = 0L;
         attachment.savedFileDir = uploadDir + System.getProperty("file.separator") + attachment.id;
         return attachment;
     }

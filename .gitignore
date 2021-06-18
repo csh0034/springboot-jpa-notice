@@ -37,3 +37,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Sample Rest Docs ###
+**/asciidoc/index.html
+**/asciidoc/index.pdf

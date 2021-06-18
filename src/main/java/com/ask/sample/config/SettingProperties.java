@@ -16,6 +16,8 @@ public class SettingProperties {
 
     private String commonErrorPage;
 
+    private String serverUrl;
+
     public String getUploadDir() {
         final String homePrefix = "~/";
         if (StringUtils.startsWith(uploadDir, homePrefix)) {

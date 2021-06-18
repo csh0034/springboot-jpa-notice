@@ -1,19 +1,19 @@
 package com.ask.sample.advice.exception;
 
-import com.ask.sample.constant.ErrorCode;
+import com.ask.sample.constant.ResponseCode;
 
 public abstract class BaseException extends RuntimeException {
 
     private static final long serialVersionUID = 3166170761941160124L;
 
-    private final ErrorCode errorCode;
+    private final ResponseCode responseCode;
 
-    public BaseException(String message, ErrorCode errorCode) {
+    public BaseException(String message, ResponseCode responseCode) {
         super(message);
-        this.errorCode = errorCode;
+        this.responseCode = responseCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
+    public ResponseCode getErrorCode() {
+        return responseCode;
     }
 }

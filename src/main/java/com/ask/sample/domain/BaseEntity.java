@@ -20,21 +20,21 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class BaseEntity implements Serializable {
 
-  private static final long serialVersionUID = -7208631692505261616L;
+    private static final long serialVersionUID = -7208631692505261616L;
 
-  @Column
-  @CreatedDate
-  private LocalDateTime createdDt;
+    @Column
+    @CreatedDate
+    private LocalDateTime createdDt;
 
-  @Column
-  @LastModifiedDate
-  private LocalDateTime modifiedDt;
+    @Column
+    @LastModifiedDate
+    private LocalDateTime modifiedDt;
 
-  @Column
-  @CreatedBy
-  private String createdBy;
+    @Column
+    @CreatedBy
+    private String createdBy;
 
-  @Column
-  @LastModifiedBy
-  private String modifiedBy;
+    @Column
+    @LastModifiedBy
+    private String modifiedBy;
 }

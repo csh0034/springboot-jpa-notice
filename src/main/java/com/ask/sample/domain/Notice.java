@@ -45,7 +45,7 @@ public class Notice extends BaseEntity {
     @Lob
     private String content;
 
-    private long readCnt;
+    private Long readCnt;
 
     public void addAttachment(Attachment attachment) {
         attachments.add(attachment);
@@ -57,7 +57,7 @@ public class Notice extends BaseEntity {
         notice.user = user;
         notice.title = title;
         notice.content = content;
-        notice.readCnt = 0;
+        notice.readCnt = 0L;
         for (Attachment attachment : attachments) {
             notice.addAttachment(attachment);
         }

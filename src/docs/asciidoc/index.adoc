@@ -1,0 +1,74 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+= Rest Docs API Document
+shchoi <csh0034@gmail.com>
+v0.0.1-SNAPSHOT
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:toc-title: Index
+//:sectnums:
+:sectlinks:
+
+[[introduction]]
+= 소개
+
+Spring boot JPA Notice API
+
+== User (A)
+
+=== api(A01)
+api(A01)
+
+=== api(A02)
+api(A02)
+
+== Notice (B)
+
+[[notice-add]]
+=== 공지사항 등록(B01)
+==== Request
+Request HTTP Example:
+include::{snippets}/notice-add/http-request.adoc[]
+
+Header :
+include::{snippets}/notice-add/request-headers.adoc[]
+
+Request Parameters :
+include::{snippets}/notice-add/request-parameters.adoc[]
+include::{snippets}/notice-add/request-parts.adoc[]
+
+CURL :
+include::{snippets}/notice-add/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/notice-add/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/notice-add/response-fields.adoc[]
+
+[[notice-find]]
+=== 공지사항 상세 조회(B02)
+==== Request
+Request HTTP Example:
+include::{snippets}/notice-find/http-request.adoc[]
+
+Header :
+include::{snippets}/notice-find/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/notice-find/path-parameters.adoc[]
+
+CURL :
+include::{snippets}/notice-find/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/notice-find/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/notice-find/response-fields.adoc[]

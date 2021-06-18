@@ -26,6 +26,7 @@ spring:
       file-size-threshold: 1MB
 
 server:
+  port: 8080
   servlet:
     encoding:
       force-response: true
@@ -42,3 +43,4 @@ logging:
 setting:
   upload-dir: ~/DEV/upload
   common-error-page: error/error
+  server-url: 'http://localhost:${server.port}'

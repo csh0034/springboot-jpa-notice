@@ -4,25 +4,34 @@ import com.ask.sample.domain.User;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.SecurityUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
+import com.ask.sample.vo.response.CommonResponseVO;
+import com.ask.sample.vo.response.NoticeResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping("/notice")
+@RestController
 @RequiredArgsConstructor
 public class NoticeController {
 
     private final NoticeService noticeService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Void> add(@Valid NoticeRequestVO noticeRequestVO) {
+    @PostMapping("/notice")
+    public CommonResponseVO<NoticeResponseVO> addNotice(@Valid NoticeRequestVO noticeRequestVO) {
         User currentUser = SecurityUtils.getCurrentUser();
-        noticeService.add(currentUser.getId(), noticeRequestVO);
-        return ResponseEntity.ok().build();
+        String noticeId = noticeService.addNotice(currentUser.getId(), noticeRequestVO);
+        NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId);
+        return CommonResponseVO.ok(noticeResponseVO);
+    }
+
+    @GetMapping("/notice/{noticeId}")
+    public CommonResponseVO<NoticeResponseVO> findNotice(@PathVariable String noticeId) {
+        NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId);
+        return CommonResponseVO.ok(noticeResponseVO);
     }
 }
