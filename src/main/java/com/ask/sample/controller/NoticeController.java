@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -24,13 +26,13 @@ public class NoticeController {
     public CommonResponseVO<NoticeResponseVO> addNotice(@Valid NoticeRequestVO noticeRequestVO) {
         User currentUser = SecurityUtils.getCurrentUser();
         String noticeId = noticeService.addNotice(currentUser.getId(), noticeRequestVO);
-        NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId);
+        NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, false);
         return CommonResponseVO.ok(noticeResponseVO);
     }
 
     @GetMapping("/notice/{noticeId}")
     public CommonResponseVO<NoticeResponseVO> findNotice(@PathVariable String noticeId) {
-        NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId);
+        NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, true);
         return CommonResponseVO.ok(noticeResponseVO);
     }
 
@@ -38,5 +40,10 @@ public class NoticeController {
     public CommonPageResponseVO<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
         Page<NoticeResponseVO> noticeList = noticeService.findAllNotice(title, pageable);
         return CommonPageResponseVO.ok(noticeList);
+    }
+
+    @GetMapping("/notice/{noticeId}/attachment/{attachmentId}")
+    public void downloadAttachment(HttpServletResponse response, @PathVariable String noticeId, @PathVariable String attachmentId) {
+        noticeService.downloadAttachment(response, noticeId, attachmentId);
     }
 }

@@ -6,6 +6,7 @@ import com.ask.sample.domain.Attachment;
 import com.ask.sample.domain.BaseEntity;
 import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
+import com.ask.sample.repository.AttachmentRepository;
 import com.ask.sample.repository.NoticeRepository;
 import com.ask.sample.repository.UserRepository;
 import com.ask.sample.util.FileUtils;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +35,7 @@ import static java.util.stream.Collectors.toList;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final AttachmentRepository attachmentRepository;
     private final UserRepository userRepository;
     private final SettingProperties settingProperties;
 
@@ -62,9 +66,13 @@ public class NoticeService {
         return notice.getId();
     }
 
-    public NoticeResponseVO findNotice(String noticeId) {
+    @Transactional
+    public NoticeResponseVO findNotice(String noticeId, boolean increaseReadCnt) {
 
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new InvalidationException("notice not found"));
+        if (increaseReadCnt) {
+            notice.increaseReadCnt();
+        }
 
         NoticeResponseVO responseVO = new NoticeResponseVO();
         responseVO.setFileCnt(notice.getAttachments().size());
@@ -93,5 +101,15 @@ public class NoticeService {
 
     public Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
         return noticeRepository.findAllNotice(title, pageable);
+    }
+
+    @Transactional
+    public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
+        Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
+                .orElseThrow(() -> new InvalidationException("attachment not found"));
+
+        attachment.increaseDownloadCnt();
+
+        FileUtils.downloadFile(response, attachment.getSavedFileDir(), attachment.getFileNm());
     }
 }

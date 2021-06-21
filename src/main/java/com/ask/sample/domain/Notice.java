@@ -61,4 +61,8 @@ public class Notice extends BaseEntity {
         attachments.forEach(notice::addAttachment);
         return notice;
     }
+
+    public void increaseReadCnt() {
+        this.readCnt++;
+    }
 }

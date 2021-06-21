@@ -29,4 +29,9 @@ public abstract class ControllerSupportTest {
 
     @Autowired
     protected EntityManager em;
+
+    protected void flushAndClear() {
+        em.flush();
+        em.clear();
+    }
 }

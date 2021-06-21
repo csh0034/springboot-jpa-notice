@@ -30,15 +30,13 @@ public class CommonPageResponseVO<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private PageVO page;
 
-    private CommonPageResponseVO(ResponseCode responseCode, List<T> result, PageVO pageVO) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
-        this.code = responseCode.getCode();
-        this.result = result;
-        this.page = pageVO;
-    }
-
     public static <T> CommonPageResponseVO<T> ok(Page<T> result) {
-        return new CommonPageResponseVO<>(ResponseCode.OK, result.getContent(), PageVO.of(result));
+        CommonPageResponseVO<T> responseVO = new CommonPageResponseVO<>();
+        responseVO.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
+        responseVO.code = ResponseCode.OK.getCode();
+        responseVO.result = result.getContent();
+        responseVO.page = PageVO.of(result);
+        return responseVO;
     }
 
     @Getter

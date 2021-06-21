@@ -50,4 +50,8 @@ public class Attachment extends BaseEntity {
         attachment.savedFileDir = uploadDir + System.getProperty("file.separator") + attachment.id;
         return attachment;
     }
+
+    public void increaseDownloadCnt() {
+        this.downloadCnt++;
+    }
 }

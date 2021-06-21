@@ -94,3 +94,22 @@ include::{snippets}/notice-all-find/http-response.adoc[]
 
 Response Fields:
 include::{snippets}/notice-all-find/response-fields.adoc[]
+
+[[notice-attachment-download]]
+=== 공지사항 첨부파일 다운로드(B04)
+==== Request
+Request HTTP Example:
+include::{snippets}/notice-attachment-download/http-request.adoc[]
+
+Header :
+include::{snippets}/notice-attachment-download/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/notice-attachment-download/path-parameters.adoc[]
+
+CURL :
+include::{snippets}/notice-attachment-download/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/notice-attachment-download/http-response.adoc[]
