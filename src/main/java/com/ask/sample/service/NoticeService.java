@@ -14,15 +14,15 @@ import com.ask.sample.vo.response.AttachmentResponseVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -40,19 +40,22 @@ public class NoticeService {
         User user = userRepository.findByIdAndEnabledIsTrue(userId).orElseThrow(() -> new InvalidationException("user not found"));
 
         List<Attachment> attachments = new ArrayList<>();
-        for (MultipartFile multipartFile : noticeRequestVO.getMultipartFiles()) {
-            if (multipartFile == null || multipartFile.isEmpty()) {
-                continue;
+
+        if (noticeRequestVO.getMultipartFiles() != null) {
+            for (MultipartFile multipartFile : noticeRequestVO.getMultipartFiles()) {
+                if (multipartFile == null || multipartFile.isEmpty()) {
+                    continue;
+                }
+
+                Attachment attachment = Attachment.create(multipartFile, settingProperties.getUploadDir());
+
+                attachments.add(attachment);
+
+                FileUtils.upload(multipartFile, settingProperties.getUploadDir(), attachment.getSavedFileDir());
             }
-
-            Attachment attachment = Attachment.createAttachment(multipartFile, settingProperties.getUploadDir());
-
-            attachments.add(attachment);
-
-            FileUtils.upload(multipartFile, settingProperties.getUploadDir(), attachment.getSavedFileDir());
         }
 
-        Notice notice = Notice.createNotice(user, noticeRequestVO.getTitle(), noticeRequestVO.getContent(), attachments);
+        Notice notice = Notice.create(user, noticeRequestVO.getTitle(), noticeRequestVO.getContent(), attachments);
 
         noticeRepository.save(notice);
 
@@ -64,6 +67,7 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new InvalidationException("notice not found"));
 
         NoticeResponseVO responseVO = new NoticeResponseVO();
+        responseVO.setFileCnt(notice.getAttachments().size());
         BeanUtils.copyProperties(notice, responseVO);
 
         List<AttachmentResponseVO> files = notice.getAttachments().stream()
@@ -85,5 +89,9 @@ public class NoticeService {
         responseVO.setFiles(files);
 
         return responseVO;
+    }
+
+    public Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
+        return noticeRepository.findAllNotice(title, pageable);
     }
 }

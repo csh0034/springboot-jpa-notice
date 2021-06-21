@@ -3,7 +3,9 @@ package com.ask.sample.controller;
 import com.ask.sample.common.ControllerSupportTest;
 import com.ask.sample.constant.Constant;
 import com.ask.sample.doc.RestDocs;
+import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
+import com.ask.sample.repository.NoticeRepository;
 import com.ask.sample.repository.UserRepository;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.SecurityUtils;
@@ -23,11 +25,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Collections;
+
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,6 +43,9 @@ class NoticeControllerTest extends ControllerSupportTest {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private NoticeRepository noticeRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -131,5 +139,62 @@ class NoticeControllerTest extends ControllerSupportTest {
                         ),
                         responseFields(RestDocs.noticeFindResponseDescriptor)
                 ));
+    }
+
+    @Test
+    @DisplayName("공지사항 조회(B03)")
+    void findAllNotice() throws Exception {
+
+        // GIVEN
+        User currentUser = SecurityUtils.getCurrentUser();
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("page", "0");
+        params.add("size", "15");
+
+        for (int i = 1; i <= 30; i++) {
+            Notice notice = Notice.create(currentUser, "New Title : " + i, "New Content : " + i, Collections.emptyList());
+            noticeRepository.save(notice);
+            Thread.sleep(1);
+        }
+
+        // WHEN
+        ResultActions result = mvc.perform(get("/notice")
+                .header(HttpHeaders.AUTHORIZATION, "AUTHORIZATION")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // THEN
+        em.flush();
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("notice-all-find",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
+                        ),
+                        requestParameters(
+                                parameterWithName("page").description("요청 페이지").optional(),
+                                parameterWithName("size").description("페이지당 출력수 (default 20)").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("timestamp").description("요청시간"),
+                                fieldWithPath("code").description("응답코드"),
+                                fieldWithPath("result[].id").description("공지사항 ID"),
+                                fieldWithPath("result[].title").description("제목"),
+                                fieldWithPath("result[].content").description("내용"),
+                                fieldWithPath("result[].fileCnt").description("파일수"),
+                                fieldWithPath("result[].readCnt").description("조회수"),
+                                fieldWithPath("result[].createdBy").description("등록자"),
+                                fieldWithPath("result[].createdDt").description("등록일"),
+                                fieldWithPath("result[].createdDe").description("등록일 " + Constant.DATE_FORMAT.getValue()),
+                                fieldWithPath("page.size").description("페이지당 출력수"),
+                                fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
+                                fieldWithPath("page.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("page.number").description("현재 페이지의 번호 (0부터 시작)"))
+
+                ));
+        ;
     }
 }

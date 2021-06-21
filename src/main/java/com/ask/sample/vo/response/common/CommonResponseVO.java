@@ -1,10 +1,13 @@
-package com.ask.sample.vo.response;
+package com.ask.sample.vo.response.common;
 
 import com.ask.sample.constant.Constant;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import static lombok.AccessLevel.PRIVATE;
 

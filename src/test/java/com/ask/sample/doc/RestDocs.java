@@ -13,6 +13,7 @@ public class RestDocs {
             fieldWithPath("result.id").description("공지사항 ID"),
             fieldWithPath("result.title").description("제목"),
             fieldWithPath("result.content").description("내용"),
+            fieldWithPath("result.fileCnt").description("파일수"),
             fieldWithPath("result.readCnt").description("조회수"),
             fieldWithPath("result.createdBy").description("등록자"),
             fieldWithPath("result.createdDt").description("등록일"),

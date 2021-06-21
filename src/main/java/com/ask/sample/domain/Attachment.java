@@ -40,7 +40,7 @@ public class Attachment extends BaseEntity {
         this.notice = notice;
     }
 
-    public static Attachment createAttachment(MultipartFile multipartFile, String uploadDir) {
+    public static Attachment create(MultipartFile multipartFile, String uploadDir) {
         Attachment attachment = new Attachment();
         attachment.id = StringUtils.getNewId("att-");
         attachment.fileNm = multipartFile.getOriginalFilename();

@@ -5,7 +5,7 @@ import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.config.SettingProperties;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.StringUtils;
-import com.ask.sample.vo.response.ExceptionResponseVO;
+import com.ask.sample.vo.response.common.ExceptionResponseVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

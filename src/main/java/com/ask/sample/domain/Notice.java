@@ -52,15 +52,13 @@ public class Notice extends BaseEntity {
         attachment.setNotice(this);
     }
 
-    public static Notice createNotice(User user, String title, String content, List<Attachment> attachments) {
+    public static Notice create(User user, String title, String content, List<Attachment> attachments) {
         Notice notice = new Notice();
         notice.user = user;
         notice.title = title;
         notice.content = content;
         notice.readCnt = 0L;
-        for (Attachment attachment : attachments) {
-            notice.addAttachment(attachment);
-        }
+        attachments.forEach(notice::addAttachment);
         return notice;
     }
 }

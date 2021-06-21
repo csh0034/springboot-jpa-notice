@@ -1,7 +1,7 @@
 package com.ask.sample.advice.exception;
 
 import com.ask.sample.constant.ResponseCode;
-import com.ask.sample.vo.response.ExceptionResponseVO.FieldError;
+import com.ask.sample.vo.response.common.ExceptionResponseVO.FieldError;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;

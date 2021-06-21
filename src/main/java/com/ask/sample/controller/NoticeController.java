@@ -4,14 +4,13 @@ import com.ask.sample.domain.User;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.SecurityUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
-import com.ask.sample.vo.response.CommonResponseVO;
+import com.ask.sample.vo.response.common.CommonPageResponseVO;
+import com.ask.sample.vo.response.common.CommonResponseVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -33,5 +32,11 @@ public class NoticeController {
     public CommonResponseVO<NoticeResponseVO> findNotice(@PathVariable String noticeId) {
         NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId);
         return CommonResponseVO.ok(noticeResponseVO);
+    }
+
+    @GetMapping("/notice")
+    public CommonPageResponseVO<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
+        Page<NoticeResponseVO> noticeList = noticeService.findAllNotice(title, pageable);
+        return CommonPageResponseVO.ok(noticeList);
     }
 }
