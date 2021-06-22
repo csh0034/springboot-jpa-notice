@@ -25,7 +25,7 @@ public class CommonResponseVO<T> {
     private T result;
 
     private CommonResponseVO(ResponseCode responseCode, T result) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
         this.code = responseCode.getCode();
         this.result = result;
     }

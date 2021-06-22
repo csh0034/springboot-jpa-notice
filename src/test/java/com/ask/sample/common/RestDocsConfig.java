@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 @TestConfiguration
-public class RestDocsConfiguration {
+public class RestDocsConfig {
 
     @Bean
     public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer() {

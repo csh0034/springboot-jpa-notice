@@ -31,16 +31,22 @@ public class ExceptionResponseVO {
     private List<FieldError> fieldErrors;
 
     private ExceptionResponseVO(ResponseCode responseCode, List<FieldError> fieldErrors) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
         this.code = responseCode.getCode();
         this.message = responseCode.getMessage();
         this.fieldErrors = fieldErrors;
     }
 
     private ExceptionResponseVO(ResponseCode responseCode) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
         this.code = responseCode.getCode();
         this.message = responseCode.getMessage();
+    }
+
+    private ExceptionResponseVO(ResponseCode responseCode, String message) {
+        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        this.code = responseCode.getCode();
+        this.message = message;
     }
 
     public static ExceptionResponseVO of(ResponseCode responseCode, BindingResult bindingResult) {
@@ -49,6 +55,10 @@ public class ExceptionResponseVO {
 
     public static ExceptionResponseVO of(ResponseCode responseCode) {
         return new ExceptionResponseVO(responseCode);
+    }
+
+    public static ExceptionResponseVO of(ResponseCode responseCode, String message) {
+        return new ExceptionResponseVO(responseCode, message);
     }
 
     public static ExceptionResponseVO of(ResponseCode responseCode, List<FieldError> fieldErrors) {

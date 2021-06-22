@@ -1,18 +1,13 @@
 package com.ask.sample.constant;
 
-public enum Constant {
+public class Constant {
 
-    DATE_FORMAT("yyyy-MM-dd HH:mm:ss");
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final String value;
-
-    Constant(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
+    public static final int JWT_EXPIRATION_TIME = 86400000;
+    public static final String JWT_SECRET = "JWT-SECRET-KEY";
+    public static final String JWT_TOKEN_PREFIX = "Bearer ";
+    public static final String JWT_HEADER_STRING = "Authorization";
 
     public enum Role {
         ROLE_USER

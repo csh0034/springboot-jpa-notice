@@ -1,15 +1,15 @@
 package com.ask.sample.domain;
 
-import com.ask.sample.constant.Constant;
 import com.ask.sample.constant.Constant.Role;
 import com.ask.sample.util.IdGenerator;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -49,15 +49,6 @@ public class User extends BaseEntity implements UserDetails {
 
     private boolean enabled;
 
-    @Transient
-    private boolean accountNonExpired;
-
-    @Transient
-    private boolean accountNonLocked;
-
-    @Transient
-    private boolean credentialsNonExpired;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList(authority.name());
@@ -65,36 +56,35 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
+        return true;
+    }
+
+    @Transient
+    public String getAuthorityString() {
+        return authority.name();
     }
 
     public static User createUser(String loginId, String password, Role authority, String userNm) {
         User user = new User();
         user.loginId = loginId;
-        user.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(password);
+        user.password = password;
         user.authority = authority;
         user.username = userNm;
         user.enabled = true;
-
-        // Not Use Field
-        user.accountNonExpired = true;
-        user.accountNonLocked = true;
-        user.credentialsNonExpired = true;
-
         return user;
     }
 
-    public void changePassword(String oldPassword, String newPassword) {
-        this.password = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(newPassword);
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 }

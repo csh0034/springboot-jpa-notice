@@ -19,6 +19,6 @@ public abstract class BaseResponseVO {
         if (createdDt == null) {
             return null;
         }
-        return createdDt.format(DateTimeFormatter.ofPattern(Constant.DATE_FORMAT.getValue()));
+        return createdDt.format(DateTimeFormatter.ofPattern(Constant.DATE_FORMAT));
     }
 }

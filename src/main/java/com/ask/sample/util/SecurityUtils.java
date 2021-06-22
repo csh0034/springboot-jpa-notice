@@ -9,12 +9,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @NoArgsConstructor(access = PRIVATE)
 public final class SecurityUtils {
+
+    private static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public static User getCurrentUser() {
         SecurityContext ctx = SecurityContextHolder.getContext();
@@ -34,7 +38,15 @@ public final class SecurityUtils {
             return false;
         }
 
-        return ctx.getAuthentication() instanceof UsernamePasswordAuthenticationToken ||
-                ctx.getAuthentication() instanceof RememberMeAuthenticationToken;
+        return ctx.getAuthentication() instanceof UsernamePasswordAuthenticationToken;
     }
+
+    public static String passwordEncode(CharSequence rawPassword) {
+        return PASSWORD_ENCODER.encode(rawPassword);
+    }
+
+    public static boolean passwordMatches(CharSequence rawPassword, String prefixEncodedPassword) {
+        return PASSWORD_ENCODER.matches(rawPassword, prefixEncodedPassword);
+    }
+
 }

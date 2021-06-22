@@ -31,12 +31,12 @@ public class UserService implements UserDetailsService {
     private void validateDuplicateMember(User user) {
         List<User> findUsers = userRepository.findAllByLoginId(user.getLoginId());
         if (!findUsers.isEmpty()) {
-            throw new InvalidationException("이미 존재하는 회원입니다.");
+            throw new InvalidationException("user already exists");
         }
     }
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        return userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException("NOT_FOUND"));
+        return userRepository.findByLoginIdAndEnabledIsTrue(loginId).orElseThrow(() -> new UsernameNotFoundException("NOT_FOUND"));
     }
 }

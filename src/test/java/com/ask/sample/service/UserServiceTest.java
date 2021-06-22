@@ -4,6 +4,7 @@ import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.constant.Constant.Role;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
+import com.ask.sample.util.SecurityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,6 +52,6 @@ class UserServiceTest {
     }
 
     private User createTestUser() {
-        return User.createUser("loginId1", "password1", Role.ROLE_USER, "userNm1");
+        return User.createUser("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
     }
 }

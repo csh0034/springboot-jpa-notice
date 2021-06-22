@@ -21,6 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.snippet.Attributes;
+import org.springframework.restdocs.snippet.Attributes.Attribute;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,7 +60,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
     @BeforeEach
     void initUser() {
-        User user = User.createUser("loginId-init", "password-init", Constant.Role.ROLE_USER, "userNm-init");
+        User user = User.createUser("loginId-init", SecurityUtils.passwordEncode("pwd-init"), Constant.Role.ROLE_USER, "userNm-init");
         userRepository.save(user);
 
         SecurityContext ctx = SecurityContextHolder.getContext();
@@ -96,8 +98,8 @@ class NoticeControllerTest extends ControllerSupportTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
                         ),
                         requestParameters(
-                                parameterWithName("title").description("제목"),
-                                parameterWithName("content").description("내용")
+                                parameterWithName("title").description("제목").attributes(new Attribute("validation", "NotBlank")),
+                                parameterWithName("content").description("내용").attributes(new Attribute("validation", "NotBlank"))
                         ),
                         requestParts(
                                 partWithName("multipartFiles").description("업로드파일[]").optional()
@@ -179,8 +181,8 @@ class NoticeControllerTest extends ControllerSupportTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
                         ),
                         requestParameters(
-                                parameterWithName("page").description("요청 페이지 (default 0)").optional(),
-                                parameterWithName("size").description("페이지당 출력수 (default 20)").optional(),
+                                parameterWithName("page").description("요청 페이지 (default 0)").optional().attributes(new Attribute("validation", "Number")),
+                                parameterWithName("size").description("페이지당 출력수 (default 20)").optional().attributes(new Attribute("validation", "Number")),
                                 parameterWithName("title").description("제목 (검색조건)").optional()
                         ),
                         responseFields(
@@ -193,7 +195,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                                 fieldWithPath("result[].readCnt").description("조회수"),
                                 fieldWithPath("result[].createdBy").description("등록자"),
                                 fieldWithPath("result[].createdDt").description("등록일"),
-                                fieldWithPath("result[].createdDe").description("등록일 " + Constant.DATE_FORMAT.getValue()),
+                                fieldWithPath("result[].createdDe").description("등록일 " + Constant.DATE_FORMAT),
                                 fieldWithPath("page.size").description("페이지당 출력수"),
                                 fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
                                 fieldWithPath("page.totalPages").description("전체 페이지 수"),
@@ -203,6 +205,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     }
 
     @Test
+    @DisplayName("공지사항 첨부파일 다운로드(B04)")
     void downloadAttachment() throws Exception {
 
         // GIVEN

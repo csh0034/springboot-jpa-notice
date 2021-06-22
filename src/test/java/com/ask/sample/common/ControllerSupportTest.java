@@ -17,7 +17,7 @@ import javax.persistence.EntityManager;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
-@Import(RestDocsConfiguration.class)
+@Import(RestDocsConfig.class)
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerSupportTest {
 
@@ -29,9 +29,4 @@ public abstract class ControllerSupportTest {
 
     @Autowired
     protected EntityManager em;
-
-    protected void flushAndClear() {
-        em.flush();
-        em.clear();
-    }
 }

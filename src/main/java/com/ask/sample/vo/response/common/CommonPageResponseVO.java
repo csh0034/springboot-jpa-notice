@@ -32,7 +32,7 @@ public class CommonPageResponseVO<T> {
 
     public static <T> CommonPageResponseVO<T> ok(Page<T> result) {
         CommonPageResponseVO<T> responseVO = new CommonPageResponseVO<>();
-        responseVO.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT.getValue());
+        responseVO.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
         responseVO.code = ResponseCode.OK.getCode();
         responseVO.result = result.getContent();
         responseVO.page = PageVO.of(result);
@@ -46,14 +46,14 @@ public class CommonPageResponseVO<T> {
         private int size;
         private long totalElements;
         private int totalPages;
-        private int number;
+        private int currentPage;
 
         public static PageVO of(Page<?> result) {
             PageVO pageVO = new PageVO();
             pageVO.size = result.getSize();
             pageVO.totalElements = result.getTotalElements();
             pageVO.totalPages = result.getTotalPages();
-            pageVO.number = result.getNumber();
+            pageVO.currentPage = result.getNumber();
             return pageVO;
         }
     }

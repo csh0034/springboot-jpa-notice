@@ -1,17 +1,20 @@
 package com.ask.sample.repository;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.common.TestConfig;
 import com.ask.sample.domain.User;
+import com.ask.sample.util.SecurityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 
-import static com.ask.sample.constant.Constant.*;
+import static com.ask.sample.constant.Constant.Role;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Import(TestConfig.class)
 class UserRepositoryTest {
 
     @Autowired UserRepository userRepository;
@@ -20,7 +23,7 @@ class UserRepositoryTest {
     @Test
     void saveUser() {
         // GIVEN
-        User user = User.createUser("loginId1", "password1", Role.ROLE_USER, "userNm1");
+        User user = User.createUser("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
 
         // WHEN
         User createUser = userRepository.save(user);

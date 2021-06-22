@@ -1,69 +1,46 @@
-/*
-DROP TABLE IF EXISTS COMT_USER;
-CREATE TABLE COMT_USER (
-	USER_ID VARCHAR(50) NOT NULL COMMENT '사용자ID',
-	LOGIN_ID VARCHAR(50) NULL DEFAULT NULL COMMENT '로그인ID',
-	AUTHORITY VARCHAR(50) NULL DEFAULT NULL COMMENT '사용자 권한',
-	PASSWORD VARCHAR(300) NULL DEFAULT NULL COMMENT '비밀번호',
-	USER_NM VARCHAR(50) NULL DEFAULT NULL COMMENT '사용자 이름',
-	ENABLED TINYINT(1) NULL DEFAULT NULL COMMENT '사용여부',
-	PRIMARY KEY (USER_ID),
-	UNIQUE INDEX LOGIN_ID (LOGIN_ID)
+create table `tb_attachment` (
+    `att_id` varchar(255) not null,
+    `created_by` varchar(255),
+    `created_dt` timestamp,
+    `modified_by` varchar(255),
+    `modified_dt` timestamp,
+    `content_type` varchar(255),
+    `download_cnt` bigint,
+    `file_nm` varchar(255),
+    `file_size` bigint,
+    `saved_file_dir` varchar(255),
+    `notice_id` varchar(255),
+    primary key (att_id)
 );
 
-DROP TABLE IF EXISTS COMT_REMEMBER;
-CREATE TABLE COMT_REMEMBER (
-	LOGIN_ID VARCHAR(50) NOT NULL COMMENT '로그인ID',
-	SERIES VARCHAR(50) NULL DEFAULT NULL COMMENT '리멤버미 key',
-	TOKEN VARCHAR(50) NULL DEFAULT NULL COMMENT '리멤버미 토큰',
-	UPDATED_DT DATETIME NULL DEFAULT NULL COMMENT '리멤버미 사용',
-	PRIMARY KEY (SERIES),
-	UNIQUE INDEX LOGIN_ID2 (LOGIN_ID)
+create table `tb_notice` (
+    `notice_id` varchar(255) not null,
+    `created_by` varchar(255),
+    `created_dt` timestamp,
+    `modified_by` varchar(255),
+    `modified_dt` timestamp,
+    `content` clob,
+    `read_cnt` bigint,
+    `title` varchar(255),
+    `user_id` varchar(255),
+    primary key (notice_id)
 );
 
-DROP TABLE IF EXISTS COMT_ATTACHMENT_GROUP;
-CREATE TABLE COMT_ATTACHMENT_GROUP (
-	ATTACHMENT_GROUP_ID VARCHAR(50) NOT NULL COMMENT '첨부파일 그룹 ID',
-	CREATOR_ID VARCHAR(50) COMMENT '생성자ID(COMT_USER.ID)',
-	CREATED_DT DATETIME COMMENT '생성일시',
-	UPDATER_ID VARCHAR(50) COMMENT '수정자ID(COMT_USER.ID)',
-	UPDATED_DT DATETIME COMMENT '수정일시',
-	PRIMARY KEY (ATTACHMENT_GROUP_ID)
-) COMMENT = '첨부파일 그룹';
+create table `tb_user` (
+    `user_id` varchar(255) not null,
+    `created_by` varchar(255),
+    `created_dt` timestamp,
+    `modified_by` varchar(255),
+    `modified_dt` timestamp,
+    `authority` varchar(255) not null,
+    `enabled` boolean not null,
+    `login_id` varchar(255) not null,
+    `password` varchar(255) not null,
+    `username` varchar(255),
+    primary key (user_id)
+);
 
-DROP TABLE IF EXISTS COMT_ATTACHMENT;
-CREATE TABLE COMT_ATTACHMENT (
-	ATTACHMENT_ID VARCHAR(50) NOT NULL COMMENT '첨부파일ID',
-	ATTACHMENT_GROUP_ID VARCHAR(50) NOT NULL COMMENT '첨부파일 그룹 ID',
-	FILE_NM VARCHAR(500) COMMENT '파일명',
-	CONTENT_TYPE VARCHAR(100) COMMENT 'Content type',
-	FILE_SIZE DECIMAL(10) COMMENT '파일크기(Byte)',
-	SAVED_FILE_PATH VARCHAR(300) COMMENT '파일저장 경로(파일명포함)',
-	DOWNLOAD_CNT DECIMAL(10) COMMENT '다운로드횟수',
-	FILE_DELETED BOOLEAN COMMENT '파일삭제여부(1:여,0:부) :  데이터는 남고, 실제 파일은 삭제하는 경우에 사용',
-	CREATOR_ID VARCHAR(50) COMMENT '생성자ID(COMT_USER.ID)',
-	CREATED_DT DATETIME COMMENT '생성일시',
-	UPDATER_ID VARCHAR(50) COMMENT '수정자ID(COMT_USER.ID)',
-	UPDATED_DT DATETIME COMMENT '수정일시',
-	PRIMARY KEY (ATTACHMENT_ID),
-	INDEX `ATTACHMENT_GROUP_ID` (`ATTACHMENT_GROUP_ID`)
-) COMMENT = '첨부파일';
-
-DROP TABLE IF EXISTS COMT_NOTICE;
-CREATE TABLE COMT_NOTICE (
-	NOTICE_ID VARCHAR(50) NOT NULL COMMENT '공지글ID',
-	TITLE VARCHAR(100) DEFAULT NULL COMMENT '제목',
-	CONTENT TEXT DEFAULT NULL COMMENT '내용',
-	READ_CNT DECIMAL(10,0) DEFAULT NULL COMMENT '조회수',
-	ATTACHMENT_GROUP_ID VARCHAR(50) DEFAULT NULL COMMENT '첨부파일그룹 ID',
-	COMPLETED TINYINT(1) DEFAULT NULL COMMENT '저장 완료 여부',
-	CREATOR_ID VARCHAR(50) COMMENT '생성자ID(COMT_USER.ID)',
-	CREATOR_NM VARCHAR(50) NULL DEFAULT NULL COMMENT '생성자 이름',
-	CREATED_DT DATETIME COMMENT '생성일시',
-	UPDATER_ID VARCHAR(50) COMMENT '수정자ID(COMT_USER.ID)',
-	UPDATER_NM VARCHAR(50) NULL DEFAULT NULL COMMENT '수정자 이름',
-	UPDATED_DT DATETIME COMMENT '수정일시',
-	PRIMARY KEY (NOTICE_ID),
-	KEY COMT_BOARD_NOTICE_IDX (NOTICE_ID, CREATED_DT)
-) COMMENT='공지사항';
-*/
+create index IDX_NOTICE_TITLE on `tb_notice` (title);
+alter table `tb_user` add constraint UK_babp79hoay0m1j87xl3cvpmji unique (login_id);
+alter table `tb_attachment` add constraint FKrdqrnxaloq5fm51so1asa2uuo foreign key (notice_id) references `tb_notice`;
+alter table `tb_notice` add constraint FKk13e5la5lb855d9agsf9lgsn4 foreign key (user_id) references `tb_user`;
