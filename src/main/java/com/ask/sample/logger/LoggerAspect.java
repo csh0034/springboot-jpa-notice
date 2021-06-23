@@ -19,14 +19,14 @@ public class LoggerAspect {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		log.info("1. args: " + Arrays.toString(pjp.getArgs()));
-		log.info("2. name: " + pjp.getSignature().getName());
+		log.debug("1. args: " + Arrays.toString(pjp.getArgs()));
+		log.debug("2. name: " + pjp.getSignature().getName());
 
 		Object result = pjp.proceed();
 
 		stopWatch.stop();
 
-		log.info(pjp.getSignature().getName() + " - method time : " + stopWatch.getTotalTimeMillis() + " ms");
+		log.debug(pjp.getSignature().getName() + " - method time : " + stopWatch.getTotalTimeMillis() + " ms");
 		return result;
 	}
 }

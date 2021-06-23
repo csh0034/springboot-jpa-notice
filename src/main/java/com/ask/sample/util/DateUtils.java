@@ -1,5 +1,6 @@
 package com.ask.sample.util;
 
+import com.ask.sample.constant.Constant;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.text.SimpleDateFormat;
@@ -13,6 +14,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
         SimpleDateFormat sdf = new SimpleDateFormat(pattern, LocaleContextHolder.getLocale());
         return sdf.format(date);
+    }
+
+    public static String formatDefault(Date date) {
+        return format(date, Constant.DATE_FORMAT);
     }
 
     public static String formatNow(String pattern) {

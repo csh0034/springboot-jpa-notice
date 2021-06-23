@@ -38,7 +38,7 @@ logging:
     root: info
     com.ask: debug
     org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: trace
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 setting:
   upload-dir: ~/DEV/upload
