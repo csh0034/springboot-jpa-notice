@@ -1,6 +1,6 @@
 package com.ask.sample.doc;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constants;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -17,7 +17,7 @@ public class RestDocs {
             fieldWithPath("result.readCnt").description("조회수"),
             fieldWithPath("result.createdBy").description("등록자"),
             fieldWithPath("result.createdDt").description("등록일"),
-            fieldWithPath("result.createdDe").description("등록일 " + Constant.DATE_FORMAT),
+            fieldWithPath("result.createdDe").description("등록일 " + Constants.DATE_FORMAT),
             fieldWithPath("result.files[].id").description("파일 ID"),
             fieldWithPath("result.files[].fileNm").description("파일명"),
             fieldWithPath("result.files[].contentType").description("Content Type"),
@@ -25,6 +25,6 @@ public class RestDocs {
             fieldWithPath("result.files[].fileUrl").description("파일Url"),
             fieldWithPath("result.files[].createdBy").description("등록자"),
             fieldWithPath("result.files[].createdDt").description("등록일"),
-            fieldWithPath("result.files[].createdDe").description("등록일 " + Constant.DATE_FORMAT)
+            fieldWithPath("result.files[].createdDe").description("등록일 " + Constants.DATE_FORMAT)
     };
 }

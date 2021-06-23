@@ -1,7 +1,8 @@
 package com.ask.sample.service;
 
-import com.ask.sample.advice.exception.InvalidationException;
+import com.ask.sample.advice.exception.BusinessException;
 import com.ask.sample.config.SettingProperties;
+import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.domain.Attachment;
 import com.ask.sample.domain.BaseEntity;
 import com.ask.sample.domain.Notice;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -40,8 +40,9 @@ public class NoticeService {
     private final SettingProperties settingProperties;
 
     @Transactional
-    public String addNotice(String userId, NoticeRequestVO noticeRequestVO) {
-        User user = userRepository.findByIdAndEnabledIsTrue(userId).orElseThrow(() -> new InvalidationException("user not found"));
+    public String addNotice(String loginId, NoticeRequestVO noticeRequestVO) {
+        User user = userRepository.findByLoginIdAndEnabledIsTrue(loginId)
+                .orElseThrow(() -> new BusinessException("user not found", ResponseCode.ENTITY_NOT_FOUND));
 
         List<Attachment> attachments = new ArrayList<>();
 
@@ -69,7 +70,9 @@ public class NoticeService {
     @Transactional
     public NoticeResponseVO findNotice(String noticeId, boolean increaseReadCnt) {
 
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new InvalidationException("notice not found"));
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new BusinessException("notice not found", ResponseCode.ENTITY_NOT_FOUND));
+
         if (increaseReadCnt) {
             notice.increaseReadCnt();
         }
@@ -106,7 +109,7 @@ public class NoticeService {
     @Transactional
     public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
         Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-                .orElseThrow(() -> new InvalidationException("attachment not found"));
+                .orElseThrow(() -> new BusinessException("attachment not found", ResponseCode.ENTITY_NOT_FOUND));
 
         attachment.increaseDownloadCnt();
 

@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ResponseUtils {
+public final class ResponseUtils {
 
     public static void writeJson(HttpServletResponse response, Object obj) throws IOException {
         response.setCharacterEncoding("UTF-8");
@@ -15,5 +15,6 @@ public class ResponseUtils {
 
         ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
         response.getWriter().write(writer.writeValueAsString(obj));
+        response.flushBuffer();
     }
 }

@@ -1,6 +1,6 @@
 package com.ask.sample.domain;
 
-import com.ask.sample.constant.Constant.Role;
+import com.ask.sample.constant.Constants.Role;
 import com.ask.sample.util.IdGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

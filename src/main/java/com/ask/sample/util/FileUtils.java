@@ -1,6 +1,6 @@
 package com.ask.sample.util;
 
-import com.ask.sample.advice.exception.InvalidationException;
+import com.ask.sample.advice.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 @Slf4j
-public class FileUtils extends org.apache.commons.io.FileUtils {
+public final class FileUtils extends org.apache.commons.io.FileUtils {
 
     public static void upload(MultipartFile multipartFile, String uploadDir, String savedFileDir) {
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
-                throw new InvalidationException(String.format("make directory(%s) fail", uploadDir));
+                throw new BusinessException(String.format("make directory(%s) fail", uploadDir));
             }
         }
 
@@ -22,7 +22,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             multipartFile.transferTo(new File(savedFileDir));
             log.debug("upload finished...({}) ", savedFileDir);
         } catch (IOException ex) {
-            throw new InvalidationException(String.format("file upload error:%s", savedFileDir));
+            throw new BusinessException(String.format("file upload error:%s", savedFileDir));
         }
     }
 
@@ -30,7 +30,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         File file = new File(savedFileDir);
 
         if (!file.exists()) {
-            throw new InvalidationException("file not found");
+            throw new BusinessException("file not found");
         }
 
         try (FileInputStream fi = new FileInputStream(file)) {
@@ -48,9 +48,9 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             }
             response.flushBuffer();
         } catch (FileNotFoundException e) {
-            throw new InvalidationException("file not found : " + file.getName());
+            throw new BusinessException("file not found : " + file.getName());
         } catch (IOException e) {
-            throw new InvalidationException("IOException : " + e.getMessage());
+            throw new BusinessException("IOException : " + e.getMessage());
         }
     }
 }

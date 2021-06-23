@@ -1,10 +1,9 @@
 package com.ask.sample.util;
 
-import com.ask.sample.advice.exception.InvalidationException;
-import com.ask.sample.domain.User;
+import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.config.security.JwtUser;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,14 +19,17 @@ public final class SecurityUtils {
 
     private static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    public static User getCurrentUser() {
+    public static JwtUser getCurrentJwtUser() {
         SecurityContext ctx = SecurityContextHolder.getContext();
 
         if (ctx.getAuthentication() == null) {
-            throw new InvalidationException("User not found");
+            throw new BusinessException("Authentication not found");
+        }
+        if (!(ctx.getAuthentication().getPrincipal() instanceof JwtUser)) {
+            throw new BusinessException("JwtUser class cast exception");
         }
 
-        return (User) ctx.getAuthentication().getPrincipal();
+        return (JwtUser) ctx.getAuthentication().getPrincipal();
     }
 
     public static boolean isAuthenticated() {

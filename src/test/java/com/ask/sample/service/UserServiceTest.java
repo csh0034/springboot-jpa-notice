@@ -1,7 +1,7 @@
 package com.ask.sample.service;
 
-import com.ask.sample.advice.exception.InvalidationException;
-import com.ask.sample.constant.Constant.Role;
+import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.constant.Constants.Role;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
 import com.ask.sample.util.SecurityUtils;
@@ -48,7 +48,7 @@ class UserServiceTest {
         userService.join(user1);
 
         // THEN
-        assertThatExceptionOfType(InvalidationException.class).isThrownBy(() -> userService.join(user2));
+        assertThatExceptionOfType(BusinessException.class).isThrownBy(() -> userService.join(user2));
     }
 
     private User createTestUser() {

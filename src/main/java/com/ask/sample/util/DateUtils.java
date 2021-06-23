@@ -1,12 +1,16 @@
 package com.ask.sample.util;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constants;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
+public final class DateUtils extends org.apache.commons.lang3.time.DateUtils {
+
+    public static Date now() {
+        return new Date();
+    }
 
     public static String format(Date date, String pattern) {
         if (date == null) {
@@ -17,7 +21,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     public static String formatDefault(Date date) {
-        return format(date, Constant.DATE_FORMAT);
+        return format(date, Constants.DATE_FORMAT);
     }
 
     public static String formatNow(String pattern) {

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 
-import static com.ask.sample.constant.Constant.Role;
+import static com.ask.sample.constant.Constants.Role;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest

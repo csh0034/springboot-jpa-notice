@@ -10,6 +10,10 @@ public class BusinessException extends BaseException {
         super(message, ResponseCode.INTERNAL_SERVER_ERROR);
     }
 
+    public BusinessException(ResponseCode responseCode) {
+        super(responseCode.getMessage(), responseCode);
+    }
+
     public BusinessException(String message, ResponseCode responseCode) {
         super(message, responseCode);
     }

@@ -6,14 +6,16 @@ public enum ResponseCode {
 
     OK(HttpStatus.OK, "40100", "OK"),
 
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "40400", "Invalid Input Value"),
-    ENTITY_NOT_FOUND(HttpStatus.BAD_REQUEST, "40401", "Entity Not Found"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "40999", "Internal Server Error"),
+    INVALID_INPUT_VALUE(HttpStatus.OK, "40400", "Invalid Input Value"),
+    ENTITY_NOT_FOUND(HttpStatus.OK, "40401", "Entity Not Found"),
 
-    AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "40701", "authentication failed");
+    AUTHENTICATION_FAILED(HttpStatus.OK, "40501", "authentication failed"),
+    JWT_VERIFY_FAILED(HttpStatus.OK, "40502", "jwt verify failed"),
+    FORBIDDEN(HttpStatus.FORBIDDEN,"40503", "forbidden"),
 
-    // EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "U001", "Email is Duplication"),
-    // LOGIN_INPUT_INVALID(HttpStatus.BAD_REQUEST, "U002", "Login input is invalid");
+    LOGIN_ID_DUPLICATED(HttpStatus.OK, "40601", "loginId duplicated"),
+
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "40999", "Internal Server Error");
 
     private final HttpStatus status;
     private final String code;

@@ -1,7 +1,8 @@
 package com.ask.sample.controller;
 
 import com.ask.sample.common.ControllerSupportTest;
-import com.ask.sample.constant.Constant;
+import com.ask.sample.config.security.JwtUser;
+import com.ask.sample.constant.Constants;
 import com.ask.sample.doc.RestDocs;
 import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
@@ -10,9 +11,7 @@ import com.ask.sample.repository.UserRepository;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.SecurityUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
-import com.ask.sample.vo.response.AttachmentResponseVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.restdocs.snippet.Attributes.Attribute;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -60,11 +58,11 @@ class NoticeControllerTest extends ControllerSupportTest {
 
     @BeforeEach
     void initUser() {
-        User user = User.createUser("loginId-init", SecurityUtils.passwordEncode("pwd-init"), Constant.Role.ROLE_USER, "userNm-init");
+        User user = User.createUser("loginId-init", SecurityUtils.passwordEncode("pwd-init"), Constants.Role.ROLE_USER, "userNm-init");
         userRepository.save(user);
 
         SecurityContext ctx = SecurityContextHolder.getContext();
-        ctx.setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
+        ctx.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
     }
 
     @Test
@@ -113,7 +111,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     void findNotice() throws Exception {
 
         // GIVEN
-        User currentUser = SecurityUtils.getCurrentUser();
+        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
 
         NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
         noticeRequestVO.setTitle("New Title");
@@ -124,7 +122,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                         new MockMultipartFile("multipartFiles", "File_2.txt", MediaType.TEXT_PLAIN_VALUE, "File 2".getBytes())
                 }
         );
-        String noticeId = noticeService.addNotice(currentUser.getId(), noticeRequestVO);
+        String noticeId = noticeService.addNotice(jwtUser.getLoginId(), noticeRequestVO);
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice/{noticeId}", noticeId)
@@ -152,7 +150,8 @@ class NoticeControllerTest extends ControllerSupportTest {
     void findAllNotice() throws Exception {
 
         // GIVEN
-        User currentUser = SecurityUtils.getCurrentUser();
+        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
+        User user = userRepository.findByLoginIdAndEnabledIsTrue(jwtUser.getLoginId()).orElse(null);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");
@@ -160,7 +159,7 @@ class NoticeControllerTest extends ControllerSupportTest {
         params.add("title", "New");
 
         for (int i = 1; i <= 30; i++) {
-            Notice notice = Notice.create(currentUser, "New Title : " + i, "New Content : " + i, Collections.emptyList());
+            Notice notice = Notice.create(user, "New Title : " + i, "New Content : " + i, Collections.emptyList());
             noticeRepository.save(notice);
             Thread.sleep(1);
         }
@@ -195,7 +194,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                                 fieldWithPath("result[].readCnt").description("조회수"),
                                 fieldWithPath("result[].createdBy").description("등록자"),
                                 fieldWithPath("result[].createdDt").description("등록일"),
-                                fieldWithPath("result[].createdDe").description("등록일 " + Constant.DATE_FORMAT),
+                                fieldWithPath("result[].createdDe").description("등록일 " + Constants.DATE_FORMAT),
                                 fieldWithPath("page.size").description("페이지당 출력수"),
                                 fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
                                 fieldWithPath("page.totalPages").description("전체 페이지 수"),
@@ -209,7 +208,8 @@ class NoticeControllerTest extends ControllerSupportTest {
     void downloadAttachment() throws Exception {
 
         // GIVEN
-        User currentUser = SecurityUtils.getCurrentUser();
+        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
+        User user = userRepository.findByLoginIdAndEnabledIsTrue(jwtUser.getLoginId()).orElse(null);
 
         NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
         noticeRequestVO.setTitle("New Title");
@@ -219,7 +219,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                         new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes())
                 }
         );
-        String noticeId = noticeService.addNotice(currentUser.getId(), noticeRequestVO);
+        String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
         NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
         String attachmentId = notice.getFiles().get(0).getId();
 

@@ -1,6 +1,6 @@
 package com.ask.sample.vo.response.common;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constants;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -32,7 +32,7 @@ public class CommonPageResponseVO<T> {
 
     public static <T> CommonPageResponseVO<T> ok(Page<T> result) {
         CommonPageResponseVO<T> responseVO = new CommonPageResponseVO<>();
-        responseVO.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        responseVO.timestamp = DateUtils.formatNow(Constants.DATE_FORMAT);
         responseVO.code = ResponseCode.OK.getCode();
         responseVO.result = result.getContent();
         responseVO.page = PageVO.of(result);

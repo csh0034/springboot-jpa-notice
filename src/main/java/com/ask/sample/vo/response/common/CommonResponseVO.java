@@ -1,6 +1,6 @@
 package com.ask.sample.vo.response.common;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constants;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,7 +25,7 @@ public class CommonResponseVO<T> {
     private T result;
 
     private CommonResponseVO(ResponseCode responseCode, T result) {
-        this.timestamp = DateUtils.formatNow(Constant.DATE_FORMAT);
+        this.timestamp = DateUtils.formatNow(Constants.DATE_FORMAT);
         this.code = responseCode.getCode();
         this.result = result;
     }

@@ -1,6 +1,7 @@
 package com.ask.sample.service;
 
-import com.ask.sample.advice.exception.InvalidationException;
+import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class UserService implements UserDetailsService {
     private void validateDuplicateMember(User user) {
         List<User> findUsers = userRepository.findAllByLoginId(user.getLoginId());
         if (!findUsers.isEmpty()) {
-            throw new InvalidationException("user already exists");
+            throw new BusinessException(ResponseCode.LOGIN_ID_DUPLICATED);
         }
     }
 

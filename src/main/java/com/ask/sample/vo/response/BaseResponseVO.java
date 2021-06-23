@@ -1,6 +1,6 @@
 package com.ask.sample.vo.response;
 
-import com.ask.sample.constant.Constant;
+import com.ask.sample.constant.Constants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +19,6 @@ public abstract class BaseResponseVO {
         if (createdDt == null) {
             return null;
         }
-        return createdDt.format(DateTimeFormatter.ofPattern(Constant.DATE_FORMAT));
+        return createdDt.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
     }
 }

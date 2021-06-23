@@ -1,6 +1,6 @@
 package com.ask.sample.controller;
 
-import com.ask.sample.domain.User;
+import com.ask.sample.config.security.JwtUser;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.SecurityUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -24,8 +23,8 @@ public class NoticeController {
 
     @PostMapping("/notice")
     public CommonResponseVO<NoticeResponseVO> addNotice(@Valid NoticeRequestVO noticeRequestVO) {
-        User currentUser = SecurityUtils.getCurrentUser();
-        String noticeId = noticeService.addNotice(currentUser.getId(), noticeRequestVO);
+        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
+        String noticeId = noticeService.addNotice(jwtUser.getLoginId(), noticeRequestVO);
         NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, false);
         return CommonResponseVO.ok(noticeResponseVO);
     }

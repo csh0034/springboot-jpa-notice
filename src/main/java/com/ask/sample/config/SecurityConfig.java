@@ -1,6 +1,7 @@
 package com.ask.sample.config;
 
 import com.ask.sample.config.security.JwtAuthenticationFilter;
+import com.ask.sample.config.security.JwtExceptionHandler;
 import com.ask.sample.config.security.JwtVerifyFilter;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +38,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/svc/**").hasRole("USER")
                 .anyRequest().permitAll()
             .and()
+                .exceptionHandling()
+                .accessDeniedHandler(new JwtExceptionHandler())
+                .authenticationEntryPoint(new JwtExceptionHandler())
+            .and()
                 .logout().disable()
             .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-            .addFilter(new JwtVerifyFilter(authenticationManager()));
+            .addFilter(new JwtVerifyFilter());
     }
 
     @Bean
