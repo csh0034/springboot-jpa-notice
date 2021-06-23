@@ -9,6 +9,9 @@ public class Constants {
     public static final String JWT_TOKEN_PREFIX = "Bearer ";
     public static final String JWT_HEADER_STRING = "Authorization";
 
+    public static final String LOGIN_ID_PARAMETER = "loginId";
+    public static final String PASSWORD_PARAMETER = "password";
+
     public enum Role {
         ROLE_USER
     }

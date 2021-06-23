@@ -1,7 +1,6 @@
 package com.ask.sample.controller;
 
 import com.ask.sample.common.ControllerSupportTest;
-import com.ask.sample.config.security.JwtUser;
 import com.ask.sample.constant.Constants;
 import com.ask.sample.doc.RestDocs;
 import com.ask.sample.domain.Notice;
@@ -9,10 +8,8 @@ import com.ask.sample.domain.User;
 import com.ask.sample.repository.NoticeRepository;
 import com.ask.sample.repository.UserRepository;
 import com.ask.sample.service.NoticeService;
-import com.ask.sample.util.SecurityUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.snippet.Attributes.Attribute;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -56,15 +50,6 @@ class NoticeControllerTest extends ControllerSupportTest {
     @Autowired
     private UserRepository userRepository;
 
-    @BeforeEach
-    void initUser() {
-        User user = User.createUser("loginId-init", SecurityUtils.passwordEncode("pwd-init"), Constants.Role.ROLE_USER, "userNm-init");
-        userRepository.save(user);
-
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        ctx.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
-    }
-
     @Test
     @DisplayName("공지사항 등록(B01)")
     void addNotice() throws Exception {
@@ -83,7 +68,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 .file(mockFile1)
                 .file(mockFile2)
                 .file(mockFile3)
-                .header(HttpHeaders.AUTHORIZATION, "AUTHORIZATION")
+                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
                 .params(params)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -93,7 +78,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 .andDo(document("notice-add",
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.MULTIPART_FORM_DATA),
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
                         ),
                         requestParameters(
                                 parameterWithName("title").description("제목").attributes(new Attribute("validation", "NotBlank")),
@@ -111,8 +96,6 @@ class NoticeControllerTest extends ControllerSupportTest {
     void findNotice() throws Exception {
 
         // GIVEN
-        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-
         NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
         noticeRequestVO.setTitle("New Title");
         noticeRequestVO.setContent("New Content");
@@ -122,11 +105,11 @@ class NoticeControllerTest extends ControllerSupportTest {
                         new MockMultipartFile("multipartFiles", "File_2.txt", MediaType.TEXT_PLAIN_VALUE, "File 2".getBytes())
                 }
         );
-        String noticeId = noticeService.addNotice(jwtUser.getLoginId(), noticeRequestVO);
+        String noticeId = noticeService.addNotice(GIVEN_LOGIN_ID, noticeRequestVO);
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice/{noticeId}", noticeId)
-                .header(HttpHeaders.AUTHORIZATION, "AUTHORIZATION")
+                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -136,7 +119,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 .andDo(document("notice-find",
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
                         ),
                         pathParameters(
                                 parameterWithName("noticeId").description("공지사항 ID")
@@ -150,8 +133,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     void findAllNotice() throws Exception {
 
         // GIVEN
-        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-        User user = userRepository.findByLoginIdAndEnabledIsTrue(jwtUser.getLoginId()).orElse(null);
+        User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");
@@ -166,7 +148,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice")
-                .header(HttpHeaders.AUTHORIZATION, "AUTHORIZATION")
+                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -177,7 +159,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 .andDo(document("notice-all-find",
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
                         ),
                         requestParameters(
                                 parameterWithName("page").description("요청 페이지 (default 0)").optional().attributes(new Attribute("validation", "Number")),
@@ -198,7 +180,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                                 fieldWithPath("page.size").description("페이지당 출력수"),
                                 fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
                                 fieldWithPath("page.totalPages").description("전체 페이지 수"),
-                                fieldWithPath("page.number").description("현재 페이지의 번호 (0부터 시작)"))
+                                fieldWithPath("page.currentPage").description("현재 페이지의 번호 (0부터 시작)"))
 
                 ));
     }
@@ -208,8 +190,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     void downloadAttachment() throws Exception {
 
         // GIVEN
-        JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-        User user = userRepository.findByLoginIdAndEnabledIsTrue(jwtUser.getLoginId()).orElse(null);
+        User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
 
         NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
         noticeRequestVO.setTitle("New Title");
@@ -225,7 +206,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice/{noticeId}/attachment/{attachmentId}", noticeId, attachmentId)
-                .header(HttpHeaders.AUTHORIZATION, "AUTHORIZATION")
+                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // THEN
@@ -234,7 +215,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 .andDo(document("notice-attachment-download",
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Token")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
                         ),
                         pathParameters(
                                 parameterWithName("noticeId").description("공지사항 ID"),

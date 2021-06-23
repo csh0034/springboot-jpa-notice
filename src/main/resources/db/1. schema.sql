@@ -1,3 +1,7 @@
+drop table if exists `tb_attachment`;
+drop table if exists `tb_notice`;
+drop table if exists `tb_user`;
+
 create table `tb_attachment` (
     `att_id` varchar(255) not null,
     `created_by` varchar(255),

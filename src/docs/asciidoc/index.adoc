@@ -20,11 +20,24 @@ Spring boot JPA Notice API
 
 == User (A)
 
-=== api(A01)
-api(A01)
+=== AccessToken 발급 (A01)
+==== Request
+Request HTTP Example:
+include::{snippets}/user-login/http-request.adoc[]
 
-=== api(A02)
-api(A02)
+Request Parameters :
+include::{snippets}/user-login/request-parameters.adoc[]
+
+CURL :
+include::{snippets}/user-login/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/user-login/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/user-login/response-fields.adoc[]
+
 
 == Notice (B)
 
