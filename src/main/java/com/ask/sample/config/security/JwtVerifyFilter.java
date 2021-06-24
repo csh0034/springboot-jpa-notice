@@ -8,8 +8,10 @@ import com.ask.sample.util.StringUtils;
 import com.ask.sample.vo.response.common.ExceptionResponseVO;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -22,8 +24,11 @@ import java.io.IOException;
 @Slf4j
 public class JwtVerifyFilter extends BasicAuthenticationFilter {
 
-    public JwtVerifyFilter() {
+    private final JwtUtils jwtUtils;
+
+    public JwtVerifyFilter(JwtUtils jwtUtils) {
         super(authentication -> authentication);
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class JwtVerifyFilter extends BasicAuthenticationFilter {
         }
 
         try {
-            JwtUser jwtUser = JwtUtils.decode(token);
+            JwtUser jwtUser = jwtUtils.decode(token);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

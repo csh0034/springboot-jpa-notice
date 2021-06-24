@@ -34,5 +34,4 @@ public abstract class ControllerSupportTest {
 
     protected static final String GIVEN_LOGIN_ID = "user-01";
     protected static final String GIVEN_PASSWORD = "1234";
-    protected static final String GIVEN_TOKEN = JwtUtils.generate(JwtUser.of(GIVEN_LOGIN_ID, "ROLE_USER"));
 }

@@ -18,6 +18,8 @@ public class SettingProperties {
 
     private String serverUrl;
 
+    private String jwtSecret;
+
     public String getUploadDir() {
         final String homePrefix = "~/";
         if (StringUtils.startsWith(uploadDir, homePrefix)) {

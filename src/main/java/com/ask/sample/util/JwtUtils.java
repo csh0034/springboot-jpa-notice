@@ -15,10 +15,15 @@ public final class JwtUtils {
     public static final String LOGIN_ID_KEY = "loginId";
     public static final String AUTHORITY_KEY = "authority";
 
-    private static final Algorithm algorithm = Algorithm.HMAC512(Constants.JWT_SECRET);
-    private static final JWTVerifier jwtVerifier = JWT.require(algorithm).acceptLeeway(10).build();
+    private final Algorithm algorithm;
+    private final JWTVerifier jwtVerifier;
 
-    public static String generate(JwtUser jwtUser) {
+    public JwtUtils(String jwtSecret) {
+        this.algorithm = Algorithm.HMAC512(jwtSecret);
+        this.jwtVerifier = JWT.require(algorithm).acceptLeeway(10).build();
+    }
+
+    public String generate(JwtUser jwtUser) {
         Date now = DateUtils.now();
         Date expiresAt =  DateUtils.addDays(now, Constants.JWT_EXPIRATION_DAY);
 
@@ -32,7 +37,7 @@ public final class JwtUtils {
         return Constants.JWT_TOKEN_PREFIX + token;
     }
 
-    public static JwtUser decode(String token) throws JWTVerificationException, IllegalArgumentException {
+    public JwtUser decode(String token) throws JWTVerificationException, IllegalArgumentException {
         token = StringUtils.replace(token, Constants.JWT_TOKEN_PREFIX, StringUtils.EMPTY);
 
         jwtVerifier.verify(token);

@@ -3,6 +3,8 @@ package com.ask.sample.config;
 import com.ask.sample.config.security.JwtAuthenticationFilter;
 import com.ask.sample.config.security.JwtExceptionHandler;
 import com.ask.sample.config.security.JwtVerifyFilter;
+import com.ask.sample.util.JwtUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final JwtUtils jwtUtils;
 
     @Override
     public void configure(WebSecurity web) {
@@ -42,8 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new JwtExceptionHandler())
             .and()
                 .logout().disable()
-            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-            .addFilter(new JwtVerifyFilter());
+            .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtils))
+            .addFilter(new JwtVerifyFilter(jwtUtils));
     }
 
     @Bean

@@ -21,8 +21,11 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    private final JwtUtils jwtUtils;
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         super(authenticationManager);
+        this.jwtUtils = jwtUtils;
         this.setUsernameParameter(Constants.LOGIN_ID_PARAMETER);
         this.setPasswordParameter(Constants.PASSWORD_PARAMETER);
     }
@@ -34,7 +37,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = (User) authResult.getPrincipal();
 
         JwtUser jwtUser = JwtUser.of(user.getLoginId(), user.getAuthorityString());
-        String token = JwtUtils.generate(jwtUser);
+        String token = jwtUtils.generate(jwtUser);
 
         ResponseUtils.writeJson(response, CommonResponseVO.ok(token));
     }

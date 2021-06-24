@@ -1,6 +1,7 @@
 package com.ask.sample.controller;
 
 import com.ask.sample.common.ControllerSupportTest;
+import com.ask.sample.config.security.JwtUser;
 import com.ask.sample.constant.Constants;
 import com.ask.sample.doc.RestDocs;
 import com.ask.sample.domain.Notice;
@@ -8,8 +9,10 @@ import com.ask.sample.domain.User;
 import com.ask.sample.repository.NoticeRepository;
 import com.ask.sample.repository.UserRepository;
 import com.ask.sample.service.NoticeService;
+import com.ask.sample.util.JwtUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,16 @@ class NoticeControllerTest extends ControllerSupportTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    private String accessToken;
+
+    @BeforeEach
+    void setup() {
+        accessToken = jwtUtils.generate(JwtUser.of(GIVEN_LOGIN_ID, "ROLE_USER"));
+    }
+
     @Test
     @DisplayName("공지사항 등록(B01)")
     void addNotice() throws Exception {
@@ -68,7 +81,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 .file(mockFile1)
                 .file(mockFile2)
                 .file(mockFile3)
-                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .params(params)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -109,7 +122,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice/{noticeId}", noticeId)
-                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -148,7 +161,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice")
-                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -200,13 +213,14 @@ class NoticeControllerTest extends ControllerSupportTest {
                         new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes())
                 }
         );
+        assert user != null;
         String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
         NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
         String attachmentId = notice.getFiles().get(0).getId();
 
         // WHEN
         ResultActions result = mvc.perform(get("/notice/{noticeId}/attachment/{attachmentId}", noticeId, attachmentId)
-                .header(HttpHeaders.AUTHORIZATION, GIVEN_TOKEN)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // THEN

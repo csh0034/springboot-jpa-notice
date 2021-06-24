@@ -44,3 +44,4 @@ setting:
   upload-dir: ~/DEV/upload
   common-error-page: error/error
   server-url: 'http://localhost:${server.port}'
+  jwt-secret: JWT-SECRET
