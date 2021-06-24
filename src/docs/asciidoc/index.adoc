@@ -126,3 +126,25 @@ include::{snippets}/notice-attachment-download/curl-request.adoc[]
 ==== Response
 Response HTTP Example:
 include::{snippets}/notice-attachment-download/http-response.adoc[]
+
+[[notice-attachment-remove]]
+=== 공지사항 첨부파일 삭제(B05)
+==== Request
+Request HTTP Example:
+include::{snippets}/notice-attachment-remove/http-request.adoc[]
+
+Header :
+include::{snippets}/notice-attachment-remove/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/notice-attachment-remove/path-parameters.adoc[]
+
+CURL :
+include::{snippets}/notice-attachment-remove/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/notice-attachment-remove/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/notice-attachment-remove/response-fields.adoc[]

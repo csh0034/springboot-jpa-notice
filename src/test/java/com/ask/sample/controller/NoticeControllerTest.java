@@ -33,8 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -188,8 +187,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                                 fieldWithPath("result[].fileCnt").description("파일수"),
                                 fieldWithPath("result[].readCnt").description("조회수"),
                                 fieldWithPath("result[].createdBy").description("등록자"),
-                                fieldWithPath("result[].createdDt").description("등록일"),
-                                fieldWithPath("result[].createdDe").description("등록일 " + Constants.DATE_FORMAT),
+                                fieldWithPath("result[].createdDt").description("등록일 " + Constants.DATE_FORMAT),
                                 fieldWithPath("page.size").description("페이지당 출력수"),
                                 fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
                                 fieldWithPath("page.totalPages").description("전체 페이지 수"),
@@ -204,6 +202,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
         // GIVEN
         User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
+        assert user != null;
 
         NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
         noticeRequestVO.setTitle("New Title");
@@ -213,7 +212,6 @@ class NoticeControllerTest extends ControllerSupportTest {
                         new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes())
                 }
         );
-        assert user != null;
         String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
         NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
         String attachmentId = notice.getFiles().get(0).getId();
@@ -243,5 +241,50 @@ class NoticeControllerTest extends ControllerSupportTest {
         assertThat(response.getContentAsString()).isNotBlank();
         assertThat(response.getContentType()).isEqualTo("application/octet-stream;charset=UTF-8");
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION)).contains("File_1.txt");
+    }
+
+    @Test
+    @DisplayName("공지사항 첨부파일 삭제(B05)")
+    void removeAttachment() throws Exception {
+
+        // GIVEN
+        User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
+        assert user != null;
+
+        NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
+        noticeRequestVO.setTitle("New Title");
+        noticeRequestVO.setContent("New Content");
+        noticeRequestVO.setMultipartFiles(
+                new MockMultipartFile[]{
+                        new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes())
+                }
+        );
+        String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
+        NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
+        String attachmentId = notice.getFiles().get(0).getId();
+
+        // WHEN
+        ResultActions result = mvc.perform(post("/notice/{noticeId}/attachment/{attachmentId}", noticeId, attachmentId)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // THEN
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("notice-attachment-remove",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
+                        ),
+                        pathParameters(
+                                parameterWithName("noticeId").description("공지사항 ID"),
+                                parameterWithName("attachmentId").description("첨부파일 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("timestamp").description("요청시간"),
+                                fieldWithPath("code").description("응답코드"))
+                ))
+                .andReturn();
+
     }
 }

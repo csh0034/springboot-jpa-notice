@@ -45,4 +45,10 @@ public class NoticeController {
     public void downloadAttachment(HttpServletResponse response, @PathVariable String noticeId, @PathVariable String attachmentId) {
         noticeService.downloadAttachment(response, noticeId, attachmentId);
     }
+
+    @PostMapping("/notice/{noticeId}/attachment/{attachmentId}")
+    public CommonResponseVO<Void> remoteAttachment(@PathVariable String noticeId, @PathVariable String attachmentId) {
+        noticeService.remoteAttachment(noticeId, attachmentId);
+        return CommonResponseVO.ok();
+    }
 }

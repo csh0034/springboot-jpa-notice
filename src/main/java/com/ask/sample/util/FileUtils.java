@@ -22,7 +22,7 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
             multipartFile.transferTo(new File(savedFileDir));
             log.debug("upload finished...({}) ", savedFileDir);
         } catch (IOException ex) {
-            throw new BusinessException(String.format("file upload error:%s", savedFileDir));
+            throw new BusinessException(String.format("file upload error : %s", savedFileDir));
         }
     }
 
@@ -30,7 +30,7 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
         File file = new File(savedFileDir);
 
         if (!file.exists()) {
-            throw new BusinessException("file not found");
+            throw new BusinessException(String.format("file not found : %s", savedFileDir));
         }
 
         try (FileInputStream fi = new FileInputStream(file)) {
@@ -51,6 +51,20 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
             throw new BusinessException("file not found : " + file.getName());
         } catch (IOException e) {
             throw new BusinessException("IOException : " + e.getMessage());
+        }
+    }
+
+    public static void removeFile(String savedFileDir) {
+        File file = new File(savedFileDir);
+
+        if (!file.exists()) {
+            return;
+        }
+
+        try {
+            file.delete();
+        } catch (SecurityException e) {
+            throw new BusinessException("SecurityException : " + e.getMessage());
         }
     }
 }

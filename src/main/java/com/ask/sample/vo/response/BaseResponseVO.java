@@ -15,7 +15,7 @@ public abstract class BaseResponseVO {
 
     protected String createdBy;
 
-    public String getCreatedDe() {
+    public String getCreatedDt() {
         if (createdDt == null) {
             return null;
         }

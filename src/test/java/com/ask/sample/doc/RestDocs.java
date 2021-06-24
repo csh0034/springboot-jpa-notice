@@ -16,15 +16,13 @@ public class RestDocs {
             fieldWithPath("result.fileCnt").description("파일수"),
             fieldWithPath("result.readCnt").description("조회수"),
             fieldWithPath("result.createdBy").description("등록자"),
-            fieldWithPath("result.createdDt").description("등록일"),
-            fieldWithPath("result.createdDe").description("등록일 " + Constants.DATE_FORMAT),
+            fieldWithPath("result.createdDt").description("등록일 " + Constants.DATE_FORMAT),
             fieldWithPath("result.files[].id").description("파일 ID"),
             fieldWithPath("result.files[].fileNm").description("파일명"),
             fieldWithPath("result.files[].contentType").description("Content Type"),
             fieldWithPath("result.files[].downloadCnt").description("다운로드수"),
             fieldWithPath("result.files[].fileUrl").description("파일Url"),
             fieldWithPath("result.files[].createdBy").description("등록자"),
-            fieldWithPath("result.files[].createdDt").description("등록일"),
-            fieldWithPath("result.files[].createdDe").description("등록일 " + Constants.DATE_FORMAT)
+            fieldWithPath("result.files[].createdDt").description("등록일 " + Constants.DATE_FORMAT)
     };
 }

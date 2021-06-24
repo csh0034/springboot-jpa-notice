@@ -115,4 +115,13 @@ public class NoticeService {
 
         FileUtils.downloadFile(response, attachment.getSavedFileDir(), attachment.getFileNm());
     }
+
+    @Transactional
+    public void remoteAttachment(String noticeId, String attachmentId) {
+        Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
+                .orElseThrow(() -> new BusinessException("attachment not found", ResponseCode.ENTITY_NOT_FOUND));
+
+        FileUtils.removeFile(attachment.getSavedFileDir());
+        attachmentRepository.delete(attachment);
+    }
 }
