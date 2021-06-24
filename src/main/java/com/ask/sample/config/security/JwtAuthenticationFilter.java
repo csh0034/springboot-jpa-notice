@@ -32,9 +32,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws IOException {
 
         User user = (User) authResult.getPrincipal();
-        String loginId = user.getLoginId();
 
-        JwtUser jwtUser = JwtUser.of(loginId, user.getAuthorityString());
+        JwtUser jwtUser = JwtUser.of(user.getLoginId(), user.getAuthorityString());
         String token = JwtUtils.generate(jwtUser);
 
         ResponseUtils.writeJson(response, CommonResponseVO.ok(token));
