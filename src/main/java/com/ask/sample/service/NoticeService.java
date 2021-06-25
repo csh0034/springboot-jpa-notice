@@ -1,8 +1,7 @@
 package com.ask.sample.service;
 
-import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.advice.exception.EntityNotFoundException;
 import com.ask.sample.config.SettingProperties;
-import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.domain.Attachment;
 import com.ask.sample.domain.BaseEntity;
 import com.ask.sample.domain.Notice;
@@ -42,7 +41,7 @@ public class NoticeService {
     @Transactional
     public String addNotice(String loginId, NoticeRequestVO noticeRequestVO) {
         User user = userRepository.findByLoginIdAndEnabledIsTrue(loginId)
-                .orElseThrow(() -> new BusinessException("user not found", ResponseCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException("user not found"));
 
         List<Attachment> attachments = new ArrayList<>();
 
@@ -71,7 +70,7 @@ public class NoticeService {
     public NoticeResponseVO findNotice(String noticeId, boolean increaseReadCnt) {
 
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new BusinessException("notice not found", ResponseCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException("notice not found"));
 
         if (increaseReadCnt) {
             notice.increaseReadCnt();
@@ -109,7 +108,7 @@ public class NoticeService {
     @Transactional
     public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
         Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-                .orElseThrow(() -> new BusinessException("attachment not found", ResponseCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
 
         attachment.increaseDownloadCnt();
 
@@ -119,7 +118,7 @@ public class NoticeService {
     @Transactional
     public void remoteAttachment(String noticeId, String attachmentId) {
         Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-                .orElseThrow(() -> new BusinessException("attachment not found", ResponseCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
 
         FileUtils.removeFile(attachment.getSavedFileDir());
         attachmentRepository.delete(attachment);

@@ -41,16 +41,16 @@ public class ExceptionAdvice {
     @ExceptionHandler(InvalidationException.class)
     public ModelAndView handleInvalidationException(InvalidationException e) {
         log.error("handleInvalidationException", e);
-        ResponseCode responseCode = e.getErrorCode();
+        ResponseCode responseCode = e.getResponseCode();
         ExceptionResponseVO responseVO = ExceptionResponseVO.of(responseCode, e.getFieldErrors());
         return getModelAndView(responseVO, responseCode.getStatus());
     }
 
     @ExceptionHandler(BaseException.class)
-    public ModelAndView handleBusinessException(BaseException e) {
-        log.error("handleBusinessExceptionHandler", e);
-        ResponseCode responseCode = e.getErrorCode();
-        ExceptionResponseVO responseVO = ExceptionResponseVO.of(responseCode);
+    public ModelAndView handleBaseException(BaseException e) {
+        log.error("handleBaseException", e);
+        ResponseCode responseCode = e.getResponseCode();
+        ExceptionResponseVO responseVO = ExceptionResponseVO.of(responseCode, e.getMessage());
         return getModelAndView(responseVO, responseCode.getStatus());
     }
 

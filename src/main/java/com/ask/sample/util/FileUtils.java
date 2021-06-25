@@ -14,7 +14,7 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
-                throw new BusinessException(String.format("make directory(%s) fail", uploadDir));
+                throw new BusinessException("make directory fail");
             }
         }
 
@@ -22,7 +22,7 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
             multipartFile.transferTo(new File(savedFileDir));
             log.debug("upload finished...({}) ", savedFileDir);
         } catch (IOException ex) {
-            throw new BusinessException(String.format("file upload error : %s", savedFileDir));
+            throw new BusinessException("file upload error");
         }
     }
 
@@ -30,12 +30,12 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
         File file = new File(savedFileDir);
 
         if (!file.exists()) {
-            throw new BusinessException(String.format("file not found : %s", savedFileDir));
+            throw new BusinessException("file not found");
         }
 
         try (FileInputStream fi = new FileInputStream(file)) {
             byte[] buf = new byte[1024*10];
-            int len = 0;
+            int len;
             fileNm = StringUtils.getDownloadFilename(fileNm);
             response.setContentType("application/octet-stream");
             response.setContentLength((int)file.length());
@@ -48,9 +48,9 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
             }
             response.flushBuffer();
         } catch (FileNotFoundException e) {
-            throw new BusinessException("file not found : " + file.getName());
+            throw new BusinessException("file not found");
         } catch (IOException e) {
-            throw new BusinessException("IOException : " + e.getMessage());
+            throw new BusinessException("IOException");
         }
     }
 
@@ -62,9 +62,12 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
         }
 
         try {
-            file.delete();
+            boolean delete = file.delete();
+            if (!delete) {
+                throw new BusinessException("file not deleted");
+            }
         } catch (SecurityException e) {
-            throw new BusinessException("SecurityException : " + e.getMessage());
+            throw new BusinessException("SecurityException");
         }
     }
 }
