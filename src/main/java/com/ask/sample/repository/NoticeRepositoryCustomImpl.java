@@ -3,8 +3,8 @@ package com.ask.sample.repository;
 import com.ask.sample.util.StringUtils;
 import com.ask.sample.vo.response.NoticeResponseVO;
 import com.ask.sample.vo.response.QNoticeResponseVO;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,11 +21,6 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
     @Override
     public Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
 
-        BooleanBuilder builder = new BooleanBuilder();
-        if (StringUtils.isNotBlank(title)) {
-            builder.and(notice.title.contains(title));
-        }
-
         QueryResults<NoticeResponseVO> result = queryFactory
                 .select(new QNoticeResponseVO(
                         notice.id,
@@ -36,12 +31,19 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
                         notice.createdDt,
                         notice.createdBy))
                 .from(notice)
-                .where(builder)
+                .where(containsTitle(title))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(notice.createdDt.desc())
                 .fetchResults();
 
         return new PageImpl<>(result.getResults(), pageable, result.getTotal());
+    }
+
+    private BooleanExpression containsTitle(String title) {
+        if (StringUtils.isBlank(title)) {
+            return null;
+        }
+        return notice.title.containsIgnoreCase(title);
     }
 }
