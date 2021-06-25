@@ -64,7 +64,7 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
         try {
             boolean delete = file.delete();
             if (!delete) {
-                throw new BusinessException("file not deleted");
+                log.debug("file not deleted");
             }
         } catch (SecurityException e) {
             throw new BusinessException("SecurityException");
