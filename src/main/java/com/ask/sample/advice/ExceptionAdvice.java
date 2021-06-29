@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -44,6 +45,13 @@ public class ExceptionAdvice {
         ResponseCode responseCode = e.getResponseCode();
         ExceptionResponseVO responseVO = ExceptionResponseVO.of(responseCode, e.getFieldErrors());
         return getModelAndView(responseVO, responseCode.getStatus());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ModelAndView handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        log.error("handleMethodArgumentTypeMismatchException", e);
+        ExceptionResponseVO responseVO = ExceptionResponseVO.of(ResponseCode.METHOD_ARGUMENT_TYPE_MISMATCH);
+        return getModelAndView(responseVO, ResponseCode.METHOD_ARGUMENT_TYPE_MISMATCH.getStatus());
     }
 
     @ExceptionHandler(BaseException.class)

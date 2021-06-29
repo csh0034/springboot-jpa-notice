@@ -8,6 +8,7 @@ public enum ResponseCode {
 
     INVALID_INPUT_VALUE(HttpStatus.OK, "40400", "Invalid Input Value"),
     ENTITY_NOT_FOUND(HttpStatus.OK, "40401", "Entity Not Found"),
+    METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.OK, "40402", "Type Mismatch"),
 
     AUTHENTICATION_FAILED(HttpStatus.OK, "40501", "authentication failed"),
     JWT_VERIFY_FAILED(HttpStatus.OK, "40502", "jwt verify failed"),
