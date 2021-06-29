@@ -1,16 +1,15 @@
 package com.ask.sample.vo.response;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.*;
 
 @Setter
 @Getter
@@ -18,27 +17,28 @@ import static com.fasterxml.jackson.annotation.JsonInclude.*;
 @NoArgsConstructor
 public class NoticeResponseVO extends BaseResponseVO {
 
-    private String id;
+  private String id;
 
-    private String title;
+  private String title;
 
-    private String content;
+  private String content;
 
-    private Long readCnt;
+  private Long readCnt;
 
-    private int fileCnt;
+  private int fileCnt;
 
-    @JsonInclude(Include.NON_NULL)
-    private List<AttachmentResponseVO> files;
+  @JsonInclude(Include.NON_NULL)
+  private List<AttachmentResponseVO> files;
 
-    @QueryProjection
-    public NoticeResponseVO(String id, String title, String content, Long readCnt, int fileCnt, LocalDateTime createdDt, String createdBy) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.readCnt = readCnt;
-        this.fileCnt = fileCnt;
-        this.createdDt = createdDt;
-        this.createdBy = createdBy;
-    }
+  @QueryProjection
+  public NoticeResponseVO(String id, String title, String content, Long readCnt, int fileCnt, LocalDateTime createdDt,
+      String createdBy) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.readCnt = readCnt;
+    this.fileCnt = fileCnt;
+    this.createdDt = createdDt;
+    this.createdBy = createdBy;
+  }
 }

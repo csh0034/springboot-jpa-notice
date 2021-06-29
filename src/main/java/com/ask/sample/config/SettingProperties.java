@@ -12,21 +12,21 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "setting")
 public class SettingProperties {
 
-    private String uploadDir;
+  private String uploadDir;
 
-    private String commonErrorPage;
+  private String commonErrorPage;
 
-    private String serverUrl;
+  private String serverUrl;
 
-    private String jwtSecret;
+  private String jwtSecret;
 
-    public String getUploadDir() {
-        final String homePrefix = "~/";
-        if (StringUtils.startsWith(uploadDir, homePrefix)) {
-            uploadDir = System.getProperty("user.home") +
-                        System.getProperty("file.separator") +
-                        StringUtils.removeStart(uploadDir, homePrefix);
-        }
-        return uploadDir;
+  public String getUploadDir() {
+    final String homePrefix = "~/";
+    if (StringUtils.startsWith(uploadDir, homePrefix)) {
+      uploadDir = System.getProperty("user.home") +
+          System.getProperty("file.separator") +
+          StringUtils.removeStart(uploadDir, homePrefix);
     }
+    return uploadDir;
+  }
 }

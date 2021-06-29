@@ -1,5 +1,7 @@
 package com.ask.sample.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.ask.sample.advice.exception.EntityNotFoundException;
 import com.ask.sample.config.SettingProperties;
 import com.ask.sample.domain.Attachment;
@@ -13,6 +15,10 @@ import com.ask.sample.util.FileUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
 import com.ask.sample.vo.response.AttachmentResponseVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -21,106 +27,99 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NoticeService {
 
-    private final NoticeRepository noticeRepository;
-    private final AttachmentRepository attachmentRepository;
-    private final UserRepository userRepository;
-    private final SettingProperties settingProperties;
+  private final NoticeRepository noticeRepository;
+  private final AttachmentRepository attachmentRepository;
+  private final UserRepository userRepository;
+  private final SettingProperties settingProperties;
 
-    @Transactional
-    public String addNotice(String loginId, NoticeRequestVO noticeRequestVO) {
-        User user = userRepository.findByLoginIdAndEnabledIsTrue(loginId)
-                .orElseThrow(() -> new EntityNotFoundException("user not found"));
+  @Transactional
+  public String addNotice(String loginId, NoticeRequestVO noticeRequestVO) {
+    User user = userRepository.findByLoginIdAndEnabledIsTrue(loginId)
+        .orElseThrow(() -> new EntityNotFoundException("user not found"));
 
-        List<Attachment> attachments = new ArrayList<>();
+    List<Attachment> attachments = new ArrayList<>();
 
-        if (noticeRequestVO.getMultipartFiles() != null) {
-            for (MultipartFile multipartFile : noticeRequestVO.getMultipartFiles()) {
-                if (multipartFile == null || multipartFile.isEmpty()) {
-                    continue;
-                }
-
-                Attachment attachment = Attachment.create(multipartFile, settingProperties.getUploadDir());
-
-                attachments.add(attachment);
-
-                FileUtils.upload(multipartFile, settingProperties.getUploadDir(), attachment.getSavedFileDir());
-            }
+    if (noticeRequestVO.getMultipartFiles() != null) {
+      for (MultipartFile multipartFile : noticeRequestVO.getMultipartFiles()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
+          continue;
         }
 
-        Notice notice = Notice.create(user, noticeRequestVO.getTitle(), noticeRequestVO.getContent(), attachments);
+        Attachment attachment = Attachment.create(multipartFile, settingProperties.getUploadDir());
 
-        noticeRepository.save(notice);
+        attachments.add(attachment);
 
-        return notice.getId();
+        FileUtils.upload(multipartFile, settingProperties.getUploadDir(), attachment.getSavedFileDir());
+      }
     }
 
-    @Transactional
-    public NoticeResponseVO findNotice(String noticeId, boolean increaseReadCnt) {
+    Notice notice = Notice.create(user, noticeRequestVO.getTitle(), noticeRequestVO.getContent(), attachments);
 
-        Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new EntityNotFoundException("notice not found"));
+    noticeRepository.save(notice);
 
-        if (increaseReadCnt) {
-            notice.increaseReadCnt();
-        }
+    return notice.getId();
+  }
 
-        NoticeResponseVO responseVO = new NoticeResponseVO();
-        responseVO.setFileCnt(notice.getAttachments().size());
-        BeanUtils.copyProperties(notice, responseVO);
+  @Transactional
+  public NoticeResponseVO findNotice(String noticeId, boolean increaseReadCnt) {
 
-        List<AttachmentResponseVO> files = notice.getAttachments().stream()
-                .sorted(Comparator.comparing(BaseEntity::getCreatedDt))
-                .map(attachment -> {
-                    AttachmentResponseVO attResponseVO = new AttachmentResponseVO();
-                    attResponseVO.setFileUrl(
-                        String.format("%s/notice/%s/attachment/%s",
-                            settingProperties.getServerUrl(),
-                            notice.getId(),
-                            attachment.getId())
-                    );
+    Notice notice = noticeRepository.findById(noticeId)
+        .orElseThrow(() -> new EntityNotFoundException("notice not found"));
 
-                    BeanUtils.copyProperties(attachment, attResponseVO);
-
-                    return attResponseVO;
-                }).collect(toList());
-
-        responseVO.setFiles(files);
-
-        return responseVO;
+    if (increaseReadCnt) {
+      notice.increaseReadCnt();
     }
 
-    public Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
-        return noticeRepository.findAllNotice(title, pageable);
-    }
+    NoticeResponseVO responseVO = new NoticeResponseVO();
+    responseVO.setFileCnt(notice.getAttachments().size());
+    BeanUtils.copyProperties(notice, responseVO);
 
-    @Transactional
-    public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
-        Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-                .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
+    List<AttachmentResponseVO> files = notice.getAttachments().stream()
+        .sorted(Comparator.comparing(BaseEntity::getCreatedDt))
+        .map(attachment -> {
+          AttachmentResponseVO attResponseVO = new AttachmentResponseVO();
+          attResponseVO.setFileUrl(
+              String.format("%s/notice/%s/attachment/%s",
+                  settingProperties.getServerUrl(),
+                  notice.getId(),
+                  attachment.getId())
+          );
 
-        attachment.increaseDownloadCnt();
+          BeanUtils.copyProperties(attachment, attResponseVO);
 
-        FileUtils.downloadFile(response, attachment.getSavedFileDir(), attachment.getFileNm());
-    }
+          return attResponseVO;
+        }).collect(toList());
 
-    @Transactional
-    public void remoteAttachment(String noticeId, String attachmentId) {
-        Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-                .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
+    responseVO.setFiles(files);
 
-        FileUtils.removeFile(attachment.getSavedFileDir());
-        attachmentRepository.delete(attachment);
-    }
+    return responseVO;
+  }
+
+  public Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
+    return noticeRepository.findAllNotice(title, pageable);
+  }
+
+  @Transactional
+  public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
+    Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
+        .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
+
+    attachment.increaseDownloadCnt();
+
+    FileUtils.downloadFile(response, attachment.getSavedFileDir(), attachment.getFileNm());
+  }
+
+  @Transactional
+  public void remoteAttachment(String noticeId, String attachmentId) {
+    Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
+        .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
+
+    FileUtils.removeFile(attachment.getSavedFileDir());
+    attachmentRepository.delete(attachment);
+  }
 }

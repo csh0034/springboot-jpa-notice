@@ -9,13 +9,13 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class AttachmentResponseVO extends BaseResponseVO {
 
-    private String id;
+  private String id;
 
-    private String fileNm;
+  private String fileNm;
 
-    private String contentType;
+  private String contentType;
 
-    private Long downloadCnt;
+  private Long downloadCnt;
 
-    private String fileUrl;
+  private String fileUrl;
 }

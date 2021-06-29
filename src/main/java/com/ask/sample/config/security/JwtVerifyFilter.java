@@ -7,50 +7,48 @@ import com.ask.sample.util.ResponseUtils;
 import com.ask.sample.util.StringUtils;
 import com.ask.sample.vo.response.common.ExceptionResponseVO;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
+import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Slf4j
 public class JwtVerifyFilter extends BasicAuthenticationFilter {
 
-    private final JwtUtils jwtUtils;
+  private final JwtUtils jwtUtils;
 
-    public JwtVerifyFilter(JwtUtils jwtUtils) {
-        super(authentication -> authentication);
-        this.jwtUtils = jwtUtils;
+  public JwtVerifyFilter(JwtUtils jwtUtils) {
+    super(authentication -> authentication);
+    this.jwtUtils = jwtUtils;
+  }
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
+
+    String token = request.getHeader(Constants.JWT_HEADER_STRING);
+
+    if (StringUtils.isBlank(token) || !StringUtils.startsWith(token, Constants.JWT_TOKEN_PREFIX)) {
+      chain.doFilter(request, response);
+      return;
     }
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    try {
+      JwtUser jwtUser = jwtUtils.decode(token);
 
-        String token = request.getHeader(Constants.JWT_HEADER_STRING);
+      Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (StringUtils.isBlank(token) || !StringUtils.startsWith(token, Constants.JWT_TOKEN_PREFIX)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        try {
-            JwtUser jwtUser = jwtUtils.decode(token);
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            chain.doFilter(request, response);
-        } catch (JWTVerificationException | IllegalArgumentException e) {
-            log.error("jwt verify failed : ", e);
-            ResponseUtils.writeJson(response, ExceptionResponseVO.of(ResponseCode.JWT_VERIFY_FAILED));
-        }
+      chain.doFilter(request, response);
+    } catch (JWTVerificationException | IllegalArgumentException e) {
+      log.error("jwt verify failed : ", e);
+      ResponseUtils.writeJson(response, ExceptionResponseVO.of(ResponseCode.JWT_VERIFY_FAILED));
     }
+  }
 }

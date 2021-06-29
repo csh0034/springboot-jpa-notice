@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringbootJpaNoticeApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SpringbootJpaNoticeApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(SpringbootJpaNoticeApplication.class, args);
+  }
 
 }

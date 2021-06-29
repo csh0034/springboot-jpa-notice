@@ -1,17 +1,26 @@
 package com.ask.sample.domain;
 
+import static javax.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
+
 import com.ask.sample.util.IdGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Table(name = "tb_notice", indexes = {
@@ -21,48 +30,48 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 public class Notice extends BaseEntity {
 
-    private static final long serialVersionUID = -1915060282725159757L;
+  private static final long serialVersionUID = -1915060282725159757L;
 
-    @Id
-    @GenericGenerator(
-        name = "noticeIdGenerator",
-        strategy = "com.ask.sample.util.IdGenerator",
-        parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "notice-")
-    )
-    @GeneratedValue(generator = "noticeIdGenerator")
-    @Column(name = "notice_id")
-    private String id;
+  @Id
+  @GenericGenerator(
+      name = "noticeIdGenerator",
+      strategy = "com.ask.sample.util.IdGenerator",
+      parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "notice-")
+  )
+  @GeneratedValue(generator = "noticeIdGenerator")
+  @Column(name = "notice_id")
+  private String id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Attachment> attachments = new ArrayList<>();
+  @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Attachment> attachments = new ArrayList<>();
 
-    private String title;
+  private String title;
 
-    @Lob
-    private String content;
+  @Lob
+  private String content;
 
-    private Long readCnt;
+  private Long readCnt;
 
-    public void addAttachment(Attachment attachment) {
-        attachments.add(attachment);
-        attachment.setNotice(this);
-    }
+  public void addAttachment(Attachment attachment) {
+    attachments.add(attachment);
+    attachment.setNotice(this);
+  }
 
-    public static Notice create(User user, String title, String content, List<Attachment> attachments) {
-        Notice notice = new Notice();
-        notice.user = user;
-        notice.title = title;
-        notice.content = content;
-        notice.readCnt = 0L;
-        attachments.forEach(notice::addAttachment);
-        return notice;
-    }
+  public static Notice create(User user, String title, String content, List<Attachment> attachments) {
+    Notice notice = new Notice();
+    notice.user = user;
+    notice.title = title;
+    notice.content = content;
+    notice.readCnt = 0L;
+    attachments.forEach(notice::addAttachment);
+    return notice;
+  }
 
-    public void increaseReadCnt() {
-        this.readCnt++;
-    }
+  public void increaseReadCnt() {
+    this.readCnt++;
+  }
 }

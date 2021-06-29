@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public abstract class BaseException extends RuntimeException {
 
-    private static final long serialVersionUID = 3166170761941160124L;
+  private static final long serialVersionUID = 3166170761941160124L;
 
-    private final ResponseCode responseCode;
+  private final ResponseCode responseCode;
 
-    public BaseException(String message, ResponseCode responseCode) {
-        super(message);
-        this.responseCode = responseCode;
-    }
+  public BaseException(String message, ResponseCode responseCode) {
+    super(message);
+    this.responseCode = responseCode;
+  }
 }

@@ -11,22 +11,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Bean
-    public JwtUtils jwtUtils(SettingProperties settingProperties) {
-        return new JwtUtils(settingProperties.getJwtSecret());
-    }
+  @Bean
+  public JwtUtils jwtUtils(SettingProperties settingProperties) {
+    return new JwtUtils(settingProperties.getJwtSecret());
+  }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedHeaders("*")
-                .allowedMethods("*")
-                .maxAge(1800L);
-    }
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**")
+        .allowedOrigins("*")
+        .allowedHeaders("*")
+        .allowedMethods("*")
+        .maxAge(1800L);
+  }
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        ApplicationConversionService.configure(registry);
-    }
+  @Override
+  public void addFormatters(FormatterRegistry registry) {
+    ApplicationConversionService.configure(registry);
+  }
 }

@@ -5,5 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface NoticeRepositoryCustom {
-    Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable);
+
+  Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable);
 }
