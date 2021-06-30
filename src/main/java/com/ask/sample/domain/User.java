@@ -80,7 +80,7 @@ public class User extends BaseEntity implements UserDetails {
     return authority.name();
   }
 
-  public static User createUser(String loginId, String password, Role authority, String userNm) {
+  public static User create(String loginId, String password, Role authority, String userNm) {
     User user = new User();
     user.loginId = loginId;
     user.password = password;

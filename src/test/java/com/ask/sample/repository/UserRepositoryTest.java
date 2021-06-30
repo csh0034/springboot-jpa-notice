@@ -25,7 +25,7 @@ class UserRepositoryTest {
   @Test
   void saveUser() {
     // GIVEN
-    User user = User.createUser("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
+    User user = User.create("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
 
     // WHEN
     User createUser = userRepository.save(user);

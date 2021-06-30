@@ -56,6 +56,6 @@ class UserServiceTest {
   }
 
   private User createTestUser() {
-    return User.createUser("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
+    return User.create("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
   }
 }
