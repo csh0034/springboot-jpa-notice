@@ -28,26 +28,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) {
     web.ignoring()
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-        .antMatchers("/error/**");
+        .antMatchers("/error/**", "/h2-console/**", "/test/**");
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .headers()
+          .frameOptions().sameOrigin()
         .and()
-        .cors()
-        .and().authorizeRequests()
-        .anyRequest().hasRole("USER")
+          .csrf().disable()
+          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .exceptionHandling()
-        .accessDeniedHandler(new JwtExceptionHandler())
-        .authenticationEntryPoint(new JwtExceptionHandler())
+          .cors()
         .and()
-        .logout().disable()
-        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtils))
-        .addFilter(new JwtVerifyFilter(jwtUtils));
+          .authorizeRequests()
+            .anyRequest().hasRole("USER")
+        .and()
+          .exceptionHandling()
+          .accessDeniedHandler(new JwtExceptionHandler())
+          .authenticationEntryPoint(new JwtExceptionHandler())
+        .and()
+          .logout().disable()
+          .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtils))
+          .addFilter(new JwtVerifyFilter(jwtUtils));
   }
 
   @Bean
