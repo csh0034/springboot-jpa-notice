@@ -49,8 +49,8 @@ public class NoticeController {
   }
 
   @PostMapping("/notice/{noticeId}/attachment/{attachmentId}")
-  public CommonResponseVO<Void> remoteAttachment(@PathVariable String noticeId, @PathVariable String attachmentId) {
-    noticeService.remoteAttachment(noticeId, attachmentId);
+  public CommonResponseVO<Void> removeAttachment(@PathVariable String noticeId, @PathVariable String attachmentId) {
+    noticeService.removeAttachment(noticeId, attachmentId);
     return CommonResponseVO.ok();
   }
 }

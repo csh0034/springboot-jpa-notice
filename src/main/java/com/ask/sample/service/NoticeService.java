@@ -115,7 +115,7 @@ public class NoticeService {
   }
 
   @Transactional
-  public void remoteAttachment(String noticeId, String attachmentId) {
+  public void removeAttachment(String noticeId, String attachmentId) {
     Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
         .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
 
