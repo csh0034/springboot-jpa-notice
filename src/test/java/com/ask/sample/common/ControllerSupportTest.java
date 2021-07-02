@@ -32,6 +32,7 @@ public abstract class ControllerSupportTest {
     @Autowired
     protected EntityManager em;
 
+    protected static final String GIVEN_USER_ID = "user-01";
     protected static final String GIVEN_LOGIN_ID = "user-01";
     protected static final String GIVEN_PASSWORD = "1234";
 }

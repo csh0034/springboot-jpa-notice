@@ -64,7 +64,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
   @BeforeEach
   void setup() {
-    accessToken = jwtUtils.generate(JwtUser.of(GIVEN_LOGIN_ID, "ROLE_USER"));
+    accessToken = jwtUtils.generate(JwtUser.of(GIVEN_USER_ID, GIVEN_LOGIN_ID, "ROLE_USER"));
   }
 
   @Test

@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     User user = (User) authResult.getPrincipal();
 
-    JwtUser jwtUser = JwtUser.of(user.getLoginId(), user.getAuthorityString());
+    JwtUser jwtUser = JwtUser.of(user.getId(), user.getLoginId(), user.getAuthorityString());
     String token = jwtUtils.generate(jwtUser);
 
     ResponseUtils.writeJson(response, CommonResponseVO.ok(token));

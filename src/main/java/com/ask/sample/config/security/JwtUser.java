@@ -4,6 +4,8 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,19 +15,17 @@ import org.springframework.security.core.authority.AuthorityUtils;
 @Getter
 @ToString
 @NoArgsConstructor(access = PRIVATE)
+@AllArgsConstructor(access = PRIVATE)
 public class JwtUser {
+
+  private String id;
 
   private String loginId;
 
   private String authority;
 
-  private JwtUser(String loginId, String authority) {
-    this.loginId = loginId;
-    this.authority = authority;
-  }
-
-  public static JwtUser of(String loginId, String authority) {
-    return new JwtUser(loginId, authority);
+  public static JwtUser of(String id, String loginId, String authority) {
+    return new JwtUser(id, loginId, authority);
   }
 
   @JsonIgnore

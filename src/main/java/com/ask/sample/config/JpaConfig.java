@@ -1,7 +1,7 @@
 package com.ask.sample.config;
 
+import com.ask.sample.config.security.JwtUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.security.Principal;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +21,7 @@ public class JpaConfig {
 
   @Bean
   public AuditorAware<String> auditorAware() {
-    return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).map(Principal::getName);
+    return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+        .map(authentication -> ((JwtUser) authentication.getPrincipal()).getId());
   }
 }
