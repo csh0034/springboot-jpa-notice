@@ -169,7 +169,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     // WHEN
     ResultActions result = mvc.perform(get("/notice")
         .header(HttpHeaders.AUTHORIZATION, accessToken)
-        .params(params)
+        .queryParams(params)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
 
