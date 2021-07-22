@@ -17,8 +17,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -28,6 +30,8 @@ import org.hibernate.annotations.Parameter;
 })
 @NoArgsConstructor(access = PROTECTED)
 @Getter
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Notice extends BaseEntity {
 
   private static final long serialVersionUID = -1915060282725159757L;
@@ -40,6 +44,7 @@ public class Notice extends BaseEntity {
   )
   @GeneratedValue(generator = "noticeIdGenerator")
   @Column(name = "notice_id")
+  @EqualsAndHashCode.Include
   private String id;
 
   @ManyToOne(fetch = LAZY)

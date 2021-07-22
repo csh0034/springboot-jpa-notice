@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -27,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class User extends BaseEntity implements UserDetails {
 
   private static final long serialVersionUID = -5694089828831086520L;
@@ -39,6 +41,7 @@ public class User extends BaseEntity implements UserDetails {
   )
   @GeneratedValue(generator = "userIdGenerator")
   @Column(name = "user_id")
+  @EqualsAndHashCode.Include
   private String id;
 
   @Column(unique = true, nullable = false)

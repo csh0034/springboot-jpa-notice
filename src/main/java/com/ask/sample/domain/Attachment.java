@@ -10,24 +10,30 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "tb_attachment")
 @NoArgsConstructor(access = PROTECTED)
 @Getter
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Attachment extends BaseEntity {
 
   private static final long serialVersionUID = 6172416700186756912L;
 
   @Id
   @Column(name = "att_id")
+  @EqualsAndHashCode.Include
   private String id;
 
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "notice_id")
+  @ToString.Exclude
   private Notice notice;
 
   private String fileNm;
