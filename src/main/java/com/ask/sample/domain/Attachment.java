@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.domain.Persistable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -22,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class Attachment extends BaseEntity {
+public class Attachment extends BaseEntity implements Persistable<String> {
 
   private static final long serialVersionUID = 6172416700186756912L;
 
@@ -63,5 +64,10 @@ public class Attachment extends BaseEntity {
 
   public void increaseDownloadCnt() {
     this.downloadCnt++;
+  }
+
+  @Override
+  public boolean isNew() {
+    return createdDt == null;
   }
 }
