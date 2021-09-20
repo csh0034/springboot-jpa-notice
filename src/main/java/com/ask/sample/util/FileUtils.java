@@ -73,4 +73,16 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
       throw new BusinessException("SecurityException");
     }
   }
+
+  public static void removeDir(File targetDir) {
+    File[] files = targetDir.listFiles();
+
+    if (files != null) {
+      for (File file : files) {
+        removeDir(file);
+      }
+    }
+
+    targetDir.delete();
+  }
 }
