@@ -1,14 +1,16 @@
 spring:
   datasource:
-    schema:
-    - classpath:db/1. schema.sql
-    data:
-    - classpath:db/2. data.sql
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
-    sql-script-encoding: UTF-8 
+
+  sql:
+    init:
+      encoding: UTF-8
+      schema-locations:
+        - classpath:db/1. schema.sql
+      data-locations:
+        - classpath:db/2. data.sql
 
   jpa:
     hibernate:
@@ -32,13 +34,10 @@ server:
       force-response: true
 
 logging:
-  pattern:
-    console: '%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%4line]){magenta} %clr(%-40.40logger{39}){cyan} %clr(:){red} %m%n%wEx'
   level:
-    root: info
-    com.ask: debug
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    "[com.ask.sample]": debug
+    "[org.hibernate.SQL]": debug
+    "[org.hibernate.type.descriptor.sql.BasicBinder]": trace
 
 setting:
   upload-dir: ~/DEV/upload
