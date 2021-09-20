@@ -1,7 +1,7 @@
 package com.ask.sample.advice.exception;
 
 import com.ask.sample.constant.ResponseCode;
-import com.ask.sample.vo.response.common.ExceptionResponseVO.FieldError;
+import com.ask.sample.vo.response.common.ExceptionResponseVO.CommonFieldError;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.BindingResult;
@@ -10,7 +10,7 @@ public class InvalidationException extends BaseException {
 
   private static final long serialVersionUID = 7949500416132768977L;
 
-  private List<FieldError> fieldErrors = new ArrayList<>();
+  private List<CommonFieldError> fieldErrors = new ArrayList<>();
 
   public InvalidationException() {
     super(ResponseCode.INVALID_INPUT_VALUE.getMessage(), ResponseCode.INVALID_INPUT_VALUE);
@@ -22,7 +22,7 @@ public class InvalidationException extends BaseException {
 
   public InvalidationException(BindingResult bindingResult) {
     super(ResponseCode.INVALID_INPUT_VALUE.getMessage(), ResponseCode.INVALID_INPUT_VALUE);
-    this.fieldErrors = FieldError.of(bindingResult);
+    this.fieldErrors = CommonFieldError.of(bindingResult);
   }
 
   public void add(String reason) {
@@ -34,14 +34,14 @@ public class InvalidationException extends BaseException {
   }
 
   public void add(String field, String value, String reason) {
-    fieldErrors.add(FieldError.of(field, value, reason));
+    fieldErrors.add(CommonFieldError.of(field, value, reason));
   }
 
   public int size() {
     return fieldErrors.size();
   }
 
-  public List<FieldError> getFieldErrors() {
+  public List<CommonFieldError> getFieldErrors() {
     if (fieldErrors.isEmpty()) {
       add(super.getMessage());
     }

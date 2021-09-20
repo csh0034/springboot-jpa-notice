@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) {
     web.ignoring()
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-        .antMatchers("/error/**", "/h2-console/**", "/test/**");
+        .antMatchers("/error/**", "/h2-console/**");
   }
 
   @Override

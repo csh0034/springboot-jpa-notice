@@ -1,10 +1,15 @@
 package com.ask.sample.vo.response;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include;
+import static java.util.stream.Collectors.toList;
 
+import com.ask.sample.constant.Constants;
+import com.ask.sample.domain.Notice;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +20,9 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class NoticeResponseVO extends BaseResponseVO {
+public class NoticeResponseVO implements Serializable {
+
+  private static final long serialVersionUID = -612696565073638129L;
 
   private String id;
 
@@ -26,6 +33,10 @@ public class NoticeResponseVO extends BaseResponseVO {
   private Long readCnt;
 
   private int fileCnt;
+
+  private String createdBy;
+
+  private LocalDateTime createdDt;
 
   @JsonInclude(Include.NON_NULL)
   private List<AttachmentResponseVO> files;
@@ -40,5 +51,30 @@ public class NoticeResponseVO extends BaseResponseVO {
     this.fileCnt = fileCnt;
     this.createdDt = createdDt;
     this.createdBy = createdBy;
+  }
+
+  public static NoticeResponseVO from(Notice notice, String serverUrl) {
+    NoticeResponseVO vo = new NoticeResponseVO();
+    vo.id = notice.getId();
+    vo.title = notice.getTitle();
+    vo.content = notice.getContent();
+    vo.readCnt = notice.getReadCnt();
+    vo.fileCnt = notice.getAttachments().size();
+    vo.createdDt = notice.getCreatedDt();
+    vo.createdBy = notice.getCreatedBy();
+    vo.files = notice.getAttachments().stream()
+        .map(attachment -> {
+          String fileUrl = String.format("%s/notice/%s/attachment/%s", serverUrl, notice.getId(), attachment.getId());
+          return AttachmentResponseVO.from(attachment, fileUrl);
+        }).collect(toList());
+
+    return vo;
+  }
+
+  public String getCreatedDt() {
+    if (createdDt == null) {
+      return null;
+    }
+    return createdDt.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
   }
 }

@@ -19,7 +19,7 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Page<NoticeResponseVO> findAllNotice(String title, Pageable pageable) {
+  public Page<NoticeResponseVO> findNotices(String title, Pageable pageable) {
 
     QueryResults<NoticeResponseVO> result = queryFactory
         .select(new QNoticeResponseVO(

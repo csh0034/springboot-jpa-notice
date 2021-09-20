@@ -1,5 +1,6 @@
 package com.ask.sample.vo.request;
 
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,7 @@ public class NoticeRequestVO {
   @NotBlank
   private String content;
 
-  private MultipartFile[] multipartFiles;
+  private String noticeId;
+
+  private List<MultipartFile> multipartFiles;
 }

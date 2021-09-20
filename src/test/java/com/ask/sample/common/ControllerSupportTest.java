@@ -1,8 +1,6 @@
 package com.ask.sample.common;
 
-import com.ask.sample.config.security.JwtUser;
-import com.ask.sample.util.JwtUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -12,8 +10,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,9 +21,6 @@ public abstract class ControllerSupportTest {
 
     @Autowired
     protected MockMvc mvc;
-
-    @Autowired
-    protected ObjectMapper objectMapper;
 
     @Autowired
     protected EntityManager em;

@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,6 +52,7 @@ public class Notice extends BaseEntity {
   @JoinColumn(name = "user_id")
   private User user;
 
+  @OrderBy(value = "createdDt DESC")
   @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Attachment> attachments = new ArrayList<>();
 
@@ -61,11 +63,6 @@ public class Notice extends BaseEntity {
 
   private Long readCnt;
 
-  public void addAttachment(Attachment attachment) {
-    attachments.add(attachment);
-    attachment.setNotice(this);
-  }
-
   public static Notice create(User user, String title, String content, List<Attachment> attachments) {
     Notice notice = new Notice();
     notice.user = user;
@@ -74,6 +71,17 @@ public class Notice extends BaseEntity {
     notice.readCnt = 0L;
     attachments.forEach(notice::addAttachment);
     return notice;
+  }
+
+  public void update(String title, String content, List<Attachment> attachments) {
+    this.title = title;
+    this.content = content;
+    attachments.forEach(this::addAttachment);
+  }
+
+  public void addAttachment(Attachment attachment) {
+    attachments.add(attachment);
+    attachment.setNotice(this);
   }
 
   public void increaseReadCnt() {

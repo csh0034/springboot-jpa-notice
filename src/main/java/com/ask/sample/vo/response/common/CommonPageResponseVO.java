@@ -6,6 +6,7 @@ import com.ask.sample.constant.Constants;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ import org.springframework.data.domain.Page;
 @Setter
 @ToString
 @NoArgsConstructor(access = PRIVATE)
-public class CommonPageResponseVO<T> {
+public class CommonPageResponseVO<T> implements Serializable {
+
+  private static final long serialVersionUID = -1665996289215403069L;
 
   private String timestamp;
 

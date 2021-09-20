@@ -7,6 +7,7 @@ import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,9 @@ import org.springframework.validation.BindingResult;
 @Getter
 @ToString
 @NoArgsConstructor(access = PRIVATE)
-public class ExceptionResponseVO {
+public class ExceptionResponseVO implements Serializable {
+
+  private static final long serialVersionUID = 4569041055942536533L;
 
   private String timestamp;
 
@@ -27,9 +30,9 @@ public class ExceptionResponseVO {
   private String message;
 
   @JsonInclude(value = Include.NON_NULL)
-  private List<FieldError> fieldErrors;
+  private List<CommonFieldError> fieldErrors;
 
-  private ExceptionResponseVO(ResponseCode responseCode, List<FieldError> fieldErrors) {
+  private ExceptionResponseVO(ResponseCode responseCode, List<CommonFieldError> fieldErrors) {
     this.timestamp = DateUtils.formatNow(Constants.DATE_FORMAT);
     this.code = responseCode.getCode();
     this.message = responseCode.getMessage();
@@ -49,7 +52,7 @@ public class ExceptionResponseVO {
   }
 
   public static ExceptionResponseVO of(ResponseCode responseCode, BindingResult bindingResult) {
-    return new ExceptionResponseVO(responseCode, FieldError.of(bindingResult));
+    return new ExceptionResponseVO(responseCode, CommonFieldError.of(bindingResult));
   }
 
   public static ExceptionResponseVO of(ResponseCode responseCode, String message) {
@@ -60,7 +63,7 @@ public class ExceptionResponseVO {
     return new ExceptionResponseVO(responseCode);
   }
 
-  public static ExceptionResponseVO of(ResponseCode responseCode, List<FieldError> fieldErrors) {
+  public static ExceptionResponseVO of(ResponseCode responseCode, List<CommonFieldError> fieldErrors) {
     return new ExceptionResponseVO(responseCode, fieldErrors);
   }
 
@@ -68,19 +71,19 @@ public class ExceptionResponseVO {
   @ToString
   @NoArgsConstructor(access = PRIVATE)
   @AllArgsConstructor(access = PRIVATE)
-  public static class FieldError {
+  public static class CommonFieldError {
 
     private String field;
     private String value;
     private String reason;
 
-    public static FieldError of(String field, String value, String reason) {
-      return new FieldError(field, value, reason);
+    public static CommonFieldError of(String field, String value, String reason) {
+      return new CommonFieldError(field, value, reason);
     }
 
-    public static List<FieldError> of(BindingResult bindingResult) {
+    public static List<CommonFieldError> of(BindingResult bindingResult) {
       return bindingResult.getFieldErrors().stream()
-          .map(error -> new FieldError(
+          .map(error -> new CommonFieldError(
               error.getField(),
               error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
               error.getDefaultMessage()))

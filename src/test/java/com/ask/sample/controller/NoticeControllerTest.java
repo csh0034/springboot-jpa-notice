@@ -29,7 +29,9 @@ import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.JwtUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +46,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
 @TestPropertySource(properties = "setting.upload-dir=~/DEV/upload-test")
 class NoticeControllerTest extends ControllerSupportTest {
@@ -119,12 +122,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
     noticeRequestVO.setTitle("New Title");
     noticeRequestVO.setContent("New Content");
-    noticeRequestVO.setMultipartFiles(
-        new MockMultipartFile[]{
-            new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes()),
-            new MockMultipartFile("multipartFiles", "File_2.txt", MediaType.TEXT_PLAIN_VALUE, "File 2".getBytes())
-        }
-    );
+    noticeRequestVO.setMultipartFiles(getMultipartFiles());
     String noticeId = noticeService.addNotice(GIVEN_LOGIN_ID, noticeRequestVO);
 
     // WHEN
@@ -150,7 +148,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
   @Test
   @DisplayName("공지사항 조회(B03)")
-  void findAllNotice() throws Exception {
+  void findNotices() throws Exception {
 
     // GIVEN
     User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
@@ -217,11 +215,8 @@ class NoticeControllerTest extends ControllerSupportTest {
     NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
     noticeRequestVO.setTitle("New Title");
     noticeRequestVO.setContent("New Content");
-    noticeRequestVO.setMultipartFiles(
-        new MockMultipartFile[]{
-            new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes())
-        }
-    );
+    noticeRequestVO.setMultipartFiles(getMultipartFiles());
+
     String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
@@ -264,11 +259,8 @@ class NoticeControllerTest extends ControllerSupportTest {
     NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
     noticeRequestVO.setTitle("New Title");
     noticeRequestVO.setContent("New Content");
-    noticeRequestVO.setMultipartFiles(
-        new MockMultipartFile[]{
-            new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes())
-        }
-    );
+    noticeRequestVO.setMultipartFiles(getMultipartFiles());
+
     String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
@@ -296,5 +288,12 @@ class NoticeControllerTest extends ControllerSupportTest {
         ))
         .andReturn();
 
+  }
+
+  private List<MultipartFile> getMultipartFiles() {
+    return Arrays.asList(
+        new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes()),
+        new MockMultipartFile("multipartFiles", "File_2.txt", MediaType.TEXT_PLAIN_VALUE, "File 2".getBytes())
+    );
   }
 }

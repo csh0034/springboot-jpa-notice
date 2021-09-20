@@ -6,6 +6,7 @@ import com.ask.sample.constant.Constants;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor(access = PRIVATE)
-public class CommonResponseVO<T> {
+public class CommonResponseVO<T> implements Serializable {
+
+  private static final long serialVersionUID = 6086380071497907730L;
 
   private String timestamp;
 
