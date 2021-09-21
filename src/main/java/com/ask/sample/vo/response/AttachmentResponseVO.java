@@ -2,6 +2,7 @@ package com.ask.sample.vo.response;
 
 import com.ask.sample.constant.Constants;
 import com.ask.sample.domain.Attachment;
+import com.ask.sample.util.StringUtils;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,9 +43,13 @@ public class AttachmentResponseVO implements Serializable {
     return vo;
   }
 
+  public String getCreatedBy() {
+    return StringUtils.defaultString(createdBy);
+  }
+
   public String getCreatedDt() {
     if (createdDt == null) {
-      return null;
+      return "";
     }
     return createdDt.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
   }

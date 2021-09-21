@@ -24,7 +24,6 @@ import com.ask.sample.doc.RestDocs;
 import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.NoticeRepository;
-import com.ask.sample.repository.UserRepository;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.JwtUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
@@ -54,9 +53,6 @@ class NoticeControllerTest extends ControllerSupportTest {
 
   @Autowired
   private NoticeRepository noticeRepository;
-
-  @Autowired
-  private UserRepository userRepository;
 
   @Autowired
   private JwtUtils jwtUtils;
@@ -113,15 +109,51 @@ class NoticeControllerTest extends ControllerSupportTest {
   }
 
   @Test
-  @DisplayName("공지사항 상세 조회(B02)")
+  @DisplayName("공지사항 수정(B02)")
+  void updateNotice() throws Exception {
+
+    // GIVEN
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("title", "Update Title");
+    params.add("content", "Update Content");
+    params.add("noticeId", GIVEN_NOTICE_ID);
+
+    MockMultipartFile mockFile = new MockMultipartFile("multipartFiles", "SAMPLE.txt", MediaType.TEXT_PLAIN_VALUE,
+        "SAMPLE".getBytes());
+
+    // WHEN
+    ResultActions result = mvc.perform(fileUpload("/notice/update")
+        .file(mockFile)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
+        .params(params)
+        .accept(MediaType.APPLICATION_JSON));
+
+    // THEN
+    result.andExpect(status().isOk())
+        .andDo(print())
+        .andDo(document("notice-update",
+            requestHeaders(
+                headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.MULTIPART_FORM_DATA),
+                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
+            ),
+            requestParameters(
+                parameterWithName("title").description("제목").attributes(new Attribute("validation", "NotBlank")),
+                parameterWithName("content").description("내용").attributes(new Attribute("validation", "NotBlank")),
+                parameterWithName("noticeId").description("공지사항 ID").attributes(new Attribute("validation", "NotBlank"))
+            ),
+            requestParts(
+                partWithName("multipartFiles").description("업로드파일[]").optional()
+            ),
+            responseFields(RestDocs.noticeFindResponseDescriptor)
+        ));
+  }
+
+  @Test
+  @DisplayName("공지사항 상세 조회(B03)")
   void findNotice() throws Exception {
 
     // GIVEN
-    NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
-    noticeRequestVO.setTitle("New Title");
-    noticeRequestVO.setContent("New Content");
-    noticeRequestVO.setMultipartFiles(getMultipartFiles());
-    String noticeId = noticeService.addNotice(GIVEN_LOGIN_ID, noticeRequestVO);
+    String noticeId = addSampleNotice(GIVEN_LOGIN_ID);
 
     // WHEN
     ResultActions result = mvc.perform(get("/notice/{noticeId}", noticeId)
@@ -145,18 +177,18 @@ class NoticeControllerTest extends ControllerSupportTest {
   }
 
   @Test
-  @DisplayName("공지사항 조회(B03)")
+  @DisplayName("공지사항 조회(B04)")
   void findNotices() throws Exception {
 
     // GIVEN
-    User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
+    User user = getSampleUser();
 
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("page", "0");
     params.add("size", "15");
     params.add("title", "New");
 
-    for (int i = 1; i <= 30; i++) {
+    for (int i = 1; i <= 20; i++) {
       Notice notice = Notice.create(user, "New Title : " + i, "New Content : " + i, Collections.emptyList());
       noticeRepository.save(notice);
       Thread.sleep(1);
@@ -185,7 +217,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 parameterWithName("title").description("제목 (검색조건)").optional()
             ),
             responseFields(
-                fieldWithPath("timestamp").description("요청시간"),
+                fieldWithPath("timestamp").description("응답시간"),
                 fieldWithPath("code").description("응답코드"),
                 fieldWithPath("result[].id").description("공지사항 ID"),
                 fieldWithPath("result[].title").description("제목"),
@@ -198,24 +230,17 @@ class NoticeControllerTest extends ControllerSupportTest {
                 fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
                 fieldWithPath("page.totalPages").description("전체 페이지 수"),
                 fieldWithPath("page.currentPage").description("현재 페이지의 번호 (0부터 시작)"))
-
         ));
   }
 
   @Test
-  @DisplayName("공지사항 첨부파일 다운로드(B04)")
+  @DisplayName("공지사항 첨부파일 다운로드(B05)")
   void downloadAttachment() throws Exception {
 
     // GIVEN
-    User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
-    assert user != null;
+    User user = getSampleUser();
+    String noticeId = addSampleNotice(user.getLoginId());
 
-    NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
-    noticeRequestVO.setTitle("New Title");
-    noticeRequestVO.setContent("New Content");
-    noticeRequestVO.setMultipartFiles(getMultipartFiles());
-
-    String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
@@ -247,19 +272,13 @@ class NoticeControllerTest extends ControllerSupportTest {
   }
 
   @Test
-  @DisplayName("공지사항 첨부파일 삭제(B05)")
+  @DisplayName("공지사항 첨부파일 삭제(B06)")
   void removeAttachment() throws Exception {
 
     // GIVEN
-    User user = userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID).orElse(null);
-    assert user != null;
+    User user = getSampleUser();
+    String noticeId = addSampleNotice(user.getLoginId());
 
-    NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
-    noticeRequestVO.setTitle("New Title");
-    noticeRequestVO.setContent("New Content");
-    noticeRequestVO.setMultipartFiles(getMultipartFiles());
-
-    String noticeId = noticeService.addNotice(user.getId(), noticeRequestVO);
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
@@ -281,14 +300,21 @@ class NoticeControllerTest extends ControllerSupportTest {
                 parameterWithName("attachmentId").description("첨부파일 ID")
             ),
             responseFields(
-                fieldWithPath("timestamp").description("요청시간"),
+                fieldWithPath("timestamp").description("응답시간"),
                 fieldWithPath("code").description("응답코드"))
         ))
         .andReturn();
-
   }
 
-  private List<MultipartFile> getMultipartFiles() {
+  private String addSampleNotice(String loginId) {
+    NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
+    noticeRequestVO.setTitle("New Title");
+    noticeRequestVO.setContent("New Content");
+    noticeRequestVO.setMultipartFiles(getSampleFiles());
+    return noticeService.addNotice(loginId, noticeRequestVO);
+  }
+
+  private List<MultipartFile> getSampleFiles() {
     return Arrays.asList(
         new MockMultipartFile("multipartFiles", "File_1.txt", MediaType.TEXT_PLAIN_VALUE, "File 1".getBytes()),
         new MockMultipartFile("multipartFiles", "File_2.txt", MediaType.TEXT_PLAIN_VALUE, "File 2".getBytes())

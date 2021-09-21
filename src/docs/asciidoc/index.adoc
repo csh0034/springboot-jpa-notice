@@ -64,8 +64,31 @@ include::{snippets}/notice-add/http-response.adoc[]
 Response Fields:
 include::{snippets}/notice-add/response-fields.adoc[]
 
+[[notice-update]]
+=== 공지사항 수정(B02)
+==== Request
+Request HTTP Example:
+include::{snippets}/notice-update/http-request.adoc[]
+
+Header :
+include::{snippets}/notice-update/request-headers.adoc[]
+
+Request Parameters :
+include::{snippets}/notice-update/request-parameters.adoc[]
+include::{snippets}/notice-update/request-parts.adoc[]
+
+CURL :
+include::{snippets}/notice-update/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/notice-update/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/notice-update/response-fields.adoc[]
+
 [[notice-find]]
-=== 공지사항 상세 조회(B02)
+=== 공지사항 상세 조회(B03)
 ==== Request
 Request HTTP Example:
 include::{snippets}/notice-find/http-request.adoc[]
@@ -87,7 +110,7 @@ Response Fields:
 include::{snippets}/notice-find/response-fields.adoc[]
 
 [[notice-all-find]]
-=== 공지사항 조회(B03)
+=== 공지사항 조회(B04)
 ==== Request
 Request HTTP Example:
 include::{snippets}/notice-all-find/http-request.adoc[]
@@ -109,7 +132,7 @@ Response Fields:
 include::{snippets}/notice-all-find/response-fields.adoc[]
 
 [[notice-attachment-download]]
-=== 공지사항 첨부파일 다운로드(B04)
+=== 공지사항 첨부파일 다운로드(B05)
 ==== Request
 Request HTTP Example:
 include::{snippets}/notice-attachment-download/http-request.adoc[]
@@ -128,7 +151,7 @@ Response HTTP Example:
 include::{snippets}/notice-attachment-download/http-response.adoc[]
 
 [[notice-attachment-remove]]
-=== 공지사항 첨부파일 삭제(B05)
+=== 공지사항 첨부파일 삭제(B06)
 ==== Request
 Request HTTP Example:
 include::{snippets}/notice-attachment-remove/http-request.adoc[]

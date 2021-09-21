@@ -63,12 +63,12 @@ public class NoticeService {
 
   private User getEnabledUser(String loginId) {
     return userRepository.findByLoginIdAndEnabledIsTrue(loginId)
-        .orElseThrow(() -> new EntityNotFoundException("user not found"));
+        .orElseThrow(() -> new EntityNotFoundException("user not found : " + loginId));
   }
 
   private Notice getNotice(String noticeId) {
     return noticeRepository.findById(noticeId)
-        .orElseThrow(() -> new EntityNotFoundException("notice not found"));
+        .orElseThrow(() -> new EntityNotFoundException("notice not found : " + noticeId));
   }
 
   private List<Attachment> upload(List<MultipartFile> multipartFiles) {
@@ -101,8 +101,7 @@ public class NoticeService {
   }
 
   public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
-    Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-        .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
+    Attachment attachment = getAttachment(noticeId, attachmentId);
 
     attachment.increaseDownloadCnt();
 
@@ -110,10 +109,14 @@ public class NoticeService {
   }
 
   public void removeAttachment(String noticeId, String attachmentId) {
-    Attachment attachment = attachmentRepository.findAttachment(noticeId, attachmentId)
-        .orElseThrow(() -> new EntityNotFoundException("attachment not found"));
+    Attachment attachment = getAttachment(noticeId, attachmentId);
 
     FileUtils.removeFile(attachment.getSavedFileDir());
     attachmentRepository.delete(attachment);
+  }
+
+  private Attachment getAttachment(String noticeId, String attachmentId) {
+    return attachmentRepository.findAttachment(noticeId, attachmentId)
+        .orElseThrow(() -> new EntityNotFoundException(String.format("attachment not found : %s, %s", noticeId, attachmentId)));
   }
 }

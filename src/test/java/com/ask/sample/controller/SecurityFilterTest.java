@@ -46,7 +46,7 @@ public class SecurityFilterTest extends ControllerSupportTest {
                     .attributes(new Attributes.Attribute("validation", "NotBlank"))
             ),
             responseFields(
-                fieldWithPath("timestamp").description("요청시간"),
+                fieldWithPath("timestamp").description("응답시간"),
                 fieldWithPath("code").description("응답코드"),
                 fieldWithPath("result").description("Access Token (JWT)"))
         ));

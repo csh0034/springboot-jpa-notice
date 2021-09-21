@@ -8,7 +8,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 public class RestDocs {
 
   public static FieldDescriptor[] noticeFindResponseDescriptor = {
-      fieldWithPath("timestamp").description("요청시간"),
+      fieldWithPath("timestamp").description("응답시간"),
       fieldWithPath("code").description("응답코드"),
       fieldWithPath("result.id").description("공지사항 ID"),
       fieldWithPath("result.title").description("제목"),
