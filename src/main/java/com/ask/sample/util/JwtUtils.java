@@ -24,7 +24,7 @@ public final class JwtUtils {
   }
 
   public String generate(JwtUser jwtUser) {
-    Date now = DateUtils.now();
+    Date now = new Date();
     Date expiresAt = DateUtils.addDays(now, Constants.JWT_EXPIRATION_DAY);
 
     String token = JWT.create()

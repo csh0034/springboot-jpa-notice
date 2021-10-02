@@ -3,14 +3,13 @@ package com.ask.sample.vo.response;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 import static java.util.stream.Collectors.toList;
 
-import com.ask.sample.constant.Constants;
 import com.ask.sample.domain.Notice;
+import com.ask.sample.util.DateUtils;
 import com.ask.sample.util.StringUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -80,6 +79,6 @@ public class NoticeResponseVO implements Serializable {
     if (createdDt == null) {
       return "";
     }
-    return createdDt.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
+    return createdDt.format(DateUtils.getDefaultTimeFormatter());
   }
 }
