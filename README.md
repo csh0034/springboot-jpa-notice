@@ -2,11 +2,11 @@
 공지사항 웹 어플리케이션
 
 ## 개발 환경
-![Generic badge](https://img.shields.io/badge/spring--boot-2.5.4-brightgreen.svg)
-![Generic badge](https://img.shields.io/badge/spring--data--jpa-2.5.4-blueviolet.svg)
+![Generic badge](https://img.shields.io/badge/spring--boot-2.5.5-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/spring--data--jpa-2.5.5-blueviolet.svg)
 ![Generic badge](https://img.shields.io/badge/querydsl-4.4.0-bbd.svg)  
 ![Generic badge](https://img.shields.io/badge/h2-1.4.200-blue.svg)
-![Generic badge](https://img.shields.io/badge/jdk-1.8-orange.svg)
+![Generic badge](https://img.shields.io/badge/jdk-11-orange.svg)
 ![Generic badge](https://img.shields.io/badge/Gradle-7.1.1-yellowgreen.svg)
 ![Generic badge](https://img.shields.io/badge/intelij-2021.2.2-purple.svg) 
 
