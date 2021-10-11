@@ -19,17 +19,16 @@ public class UserService implements UserDetailsService {
 
   private final UserRepository userRepository;
 
-  public String addUser(User user) {
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    return userRepository.findByEmailAndEnabledIsTrue(email).orElseThrow(() -> new UsernameNotFoundException("NOT_FOUND"));
+  }
+
+  public String addUser(UserRequestVO userRequestVO) {
+    User user = userRequestVO.toEntity();
     validateDuplicateMember(user.getEmail());
     userRepository.save(user);
     return user.getId();
-  }
-
-  public UserResponseVO findUser(String userId) {
-    User user = userRepository.findById(userId)
-        .filter(User::isEnabled)
-        .orElseThrow(() -> new EntityNotFoundException("user not found : " + userId));
-    return UserResponseVO.of(user);
   }
 
   private void validateDuplicateMember(String email) {
@@ -38,8 +37,23 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return userRepository.findByEmailAndEnabledIsTrue(email).orElseThrow(() -> new UsernameNotFoundException("NOT_FOUND"));
+  public String updateUser(String userId, UserRequestVO requestVO) {
+    User user = getEnabledUser(userId);
+    user.update(requestVO.getEmail(), requestVO.getPassword(), requestVO.getName());
+    return user.getId();
+  }
+
+  private User getEnabledUser(String userId) {
+    return userRepository.findByIdAndEnabledIsTrue(userId)
+        .orElseThrow(() -> new EntityNotFoundException("user not found : " + userId));
+  }
+
+  public UserResponseVO findUser(String userId) {
+    return UserResponseVO.of(getEnabledUser(userId));
+  }
+
+  public void deleteUser(String userId) {
+    User user = getEnabledUser(userId);
+    userRepository.delete(user);
   }
 }

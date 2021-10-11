@@ -37,7 +37,7 @@ public abstract class ControllerSupportTest {
   protected static final String GIVEN_NOTICE_ID = "notice-01";
 
   protected User getSampleUser() {
-    return userRepository.findByEmailAndEnabledIsTrue(GIVEN_EMAIL)
+    return userRepository.findByIdAndEnabledIsTrue(GIVEN_USER_ID)
         .orElseThrow(() -> new EntityNotFoundException("user not found"));
   }
 }

@@ -23,6 +23,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Parameter;
 
 @Entity
@@ -44,18 +46,20 @@ public class Notice extends BaseEntity {
       parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "notice-")
   )
   @GeneratedValue(generator = "noticeIdGenerator")
-  @Column(name = "notice_id")
+  @Column(name = "notice_id", length = 50)
   @EqualsAndHashCode.Include
   private String id;
 
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "user_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private User user;
 
   @OrderBy(value = "createdDt DESC")
   @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Attachment> attachments = new ArrayList<>();
 
+  @Column(length = 50)
   private String title;
 
   @Lob

@@ -34,8 +34,8 @@ public class NoticeService {
   private final UserRepository userRepository;
   private final SettingProperties settingProperties;
 
-  public String addNotice(String email, NoticeRequestVO noticeRequestVO) {
-    User user = getEnabledUser(email);
+  public String addNotice(String userId, NoticeRequestVO noticeRequestVO) {
+    User user = getEnabledUser(userId);
 
     List<Attachment> attachments = upload(noticeRequestVO.getMultipartFiles());
 
@@ -46,10 +46,10 @@ public class NoticeService {
     return notice.getId();
   }
 
-  public String updateNotice(String email, NoticeRequestVO noticeRequestVO) {
-    User user = getEnabledUser(email);
+  public String updateNotice(String userId, String noticeId, NoticeRequestVO noticeRequestVO) {
+    User user = getEnabledUser(userId);
 
-    Notice notice = getNotice(noticeRequestVO.getNoticeId());
+    Notice notice = getNotice(noticeId);
 
     if (!StringUtils.equals(notice.getCreatedBy(), user.getId())) {
       throw new BusinessException("no permission to update");
@@ -62,9 +62,9 @@ public class NoticeService {
     return notice.getId();
   }
 
-  private User getEnabledUser(String email) {
-    return userRepository.findByEmailAndEnabledIsTrue(email)
-        .orElseThrow(() -> new EntityNotFoundException("user not found : " + email));
+  private User getEnabledUser(String userId) {
+    return userRepository.findByIdAndEnabledIsTrue(userId)
+        .orElseThrow(() -> new EntityNotFoundException("user not found : " + userId));
   }
 
   private Notice getNotice(String noticeId) {
@@ -101,6 +101,15 @@ public class NoticeService {
     return noticeRepository.findNotices(title, pageable);
   }
 
+  public void deleteNotice(String noticeId) {
+    Notice notice = getNotice(noticeId);
+
+    notice.getAttachments()
+        .forEach(attachment -> FileUtils.removeFile(attachment.getSavedFileDir()));
+
+    noticeRepository.delete(notice);
+  }
+
   public void downloadAttachment(HttpServletResponse response, String noticeId, String attachmentId) {
     Attachment attachment = getAttachment(noticeId, attachmentId);
 
@@ -109,7 +118,7 @@ public class NoticeService {
     FileUtils.downloadFile(response, attachment.getSavedFileDir(), attachment.getFileNm());
   }
 
-  public void removeAttachment(String noticeId, String attachmentId) {
+  public void deleteAttachment(String noticeId, String attachmentId) {
     Attachment attachment = getAttachment(noticeId, attachmentId);
 
     FileUtils.removeFile(attachment.getSavedFileDir());

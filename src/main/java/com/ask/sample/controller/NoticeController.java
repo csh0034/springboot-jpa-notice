@@ -1,10 +1,8 @@
 package com.ask.sample.controller;
 
-import com.ask.sample.advice.exception.InvalidationException;
 import com.ask.sample.config.security.JwtUser;
 import com.ask.sample.service.NoticeService;
 import com.ask.sample.util.SecurityUtils;
-import com.ask.sample.util.StringUtils;
 import com.ask.sample.vo.request.NoticeRequestVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
 import com.ask.sample.vo.response.common.CommonPageResponseVO;
@@ -14,7 +12,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,26 +27,16 @@ public class NoticeController {
   @PostMapping("/notices")
   public CommonResponseVO<NoticeResponseVO> addNotice(@Valid NoticeRequestVO noticeRequestVO) {
     JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-    String noticeId = noticeService.addNotice(jwtUser.getEmail(), noticeRequestVO);
-    NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, false);
+    String id = noticeService.addNotice(jwtUser.getUserId(), noticeRequestVO);
+    NoticeResponseVO noticeResponseVO = noticeService.findNotice(id, false);
     return CommonResponseVO.ok(noticeResponseVO);
   }
 
-  @PostMapping("/notices/update")
-  public CommonResponseVO<NoticeResponseVO> updateNotice(NoticeRequestVO noticeRequestVO, BindingResult bindingResult) {
-    InvalidationException ies = new InvalidationException(bindingResult);
-
-    if (StringUtils.isBlank(noticeRequestVO.getNoticeId())) {
-      ies.add("noticeId", "noticeId must not be blank");
-    }
-
-    if (ies.size() > 0 || bindingResult.hasErrors()) {
-      throw ies;
-    }
-
+  @PostMapping("/notices/{noticeId}")
+  public CommonResponseVO<NoticeResponseVO> updateNotice(@PathVariable String noticeId, @Valid NoticeRequestVO noticeRequestVO) {
     JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-    String noticeId = noticeService.updateNotice(jwtUser.getEmail(), noticeRequestVO);
-    NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, false);
+    String id = noticeService.updateNotice(jwtUser.getUserId(), noticeId, noticeRequestVO);
+    NoticeResponseVO noticeResponseVO = noticeService.findNotice(id, false);
     return CommonResponseVO.ok(noticeResponseVO);
   }
 
@@ -64,14 +52,20 @@ public class NoticeController {
     return CommonPageResponseVO.ok(notices);
   }
 
+  @DeleteMapping("/notices/{noticeId}")
+  public CommonResponseVO<Void> deleteNotice(@PathVariable String noticeId) {
+    noticeService.deleteNotice(noticeId);
+    return CommonResponseVO.ok();
+  }
+
   @GetMapping("/notices/{noticeId}/attachments/{attachmentId}")
   public void downloadAttachment(HttpServletResponse response, @PathVariable String noticeId, @PathVariable String attachmentId) {
     noticeService.downloadAttachment(response, noticeId, attachmentId);
   }
 
-  @PostMapping("/notices/{noticeId}/attachments/{attachmentId}")
-  public CommonResponseVO<Void> removeAttachment(@PathVariable String noticeId, @PathVariable String attachmentId) {
-    noticeService.removeAttachment(noticeId, attachmentId);
+  @DeleteMapping("/notices/{noticeId}/attachments/{attachmentId}")
+  public CommonResponseVO<Void> deleteAttachment(@PathVariable String noticeId, @PathVariable String attachmentId) {
+    noticeService.deleteAttachment(noticeId, attachmentId);
     return CommonResponseVO.ok();
   }
 }

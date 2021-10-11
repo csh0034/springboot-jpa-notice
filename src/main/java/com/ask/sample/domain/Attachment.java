@@ -29,7 +29,7 @@ public class Attachment extends BaseEntity implements Persistable<String> {
   private static final long serialVersionUID = 6172416700186756912L;
 
   @Id
-  @Column(name = "att_id")
+  @Column(name = "att_id", length = 50)
   @EqualsAndHashCode.Include
   private String id;
 
@@ -38,14 +38,17 @@ public class Attachment extends BaseEntity implements Persistable<String> {
   @ToString.Exclude
   private Notice notice;
 
+  @Column(length = 50)
   private String fileNm;
 
+  @Column(length = 30)
   private String contentType;
 
   private Long fileSize;
 
   private Long downloadCnt;
 
+  @Column(length = 100)
   private String savedFileDir;
 
   public void setNotice(Notice notice) {

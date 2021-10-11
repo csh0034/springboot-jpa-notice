@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -116,13 +116,12 @@ class NoticeControllerTest extends ControllerSupportTest {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("title", "Update Title");
     params.add("content", "Update Content");
-    params.add("noticeId", GIVEN_NOTICE_ID);
 
     MockMultipartFile mockFile = new MockMultipartFile("multipartFiles", "SAMPLE.txt", MediaType.TEXT_PLAIN_VALUE,
         "SAMPLE".getBytes());
 
     // WHEN
-    ResultActions result = mvc.perform(fileUpload("/notices/update")
+    ResultActions result = mvc.perform(fileUpload("/notices/{noticeId}", GIVEN_NOTICE_ID)
         .file(mockFile)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .params(params)
@@ -138,8 +137,7 @@ class NoticeControllerTest extends ControllerSupportTest {
             ),
             requestParameters(
                 parameterWithName("title").description("제목").attributes(new Attribute("validation", "NotBlank")),
-                parameterWithName("content").description("내용").attributes(new Attribute("validation", "NotBlank")),
-                parameterWithName("noticeId").description("공지사항 ID").attributes(new Attribute("validation", "NotBlank"))
+                parameterWithName("content").description("내용").attributes(new Attribute("validation", "NotBlank"))
             ),
             requestParts(
                 partWithName("multipartFiles").description("업로드파일[]").optional()
@@ -153,7 +151,7 @@ class NoticeControllerTest extends ControllerSupportTest {
   void findNotice() throws Exception {
 
     // GIVEN
-    String noticeId = addSampleNotice(GIVEN_EMAIL);
+    String noticeId = addSampleNotice(GIVEN_USER_ID);
 
     // WHEN
     ResultActions result = mvc.perform(get("/notices/{noticeId}", noticeId)
@@ -234,12 +232,43 @@ class NoticeControllerTest extends ControllerSupportTest {
   }
 
   @Test
-  @DisplayName("공지사항 첨부파일 다운로드(B05)")
+  @DisplayName("공지사항 삭제(B05)")
+  void deleteNotice() throws Exception {
+
+    // GIVEN
+    User user = getSampleUser();
+    String noticeId = addSampleNotice(user.getId());
+
+    // WHEN
+    ResultActions result = mvc.perform(delete("/notices/{noticeId}", noticeId)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
+        .contentType(MediaType.APPLICATION_JSON));
+
+    // THEN
+    result.andExpect(status().isOk())
+        .andDo(print())
+        .andDo(document("notice-delete",
+            requestHeaders(
+                headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
+                headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
+            ),
+            pathParameters(
+                parameterWithName("noticeId").description("공지사항 ID")
+            ),
+            responseFields(
+                fieldWithPath("timestamp").description("응답시간"),
+                fieldWithPath("code").description("응답코드"))
+        ))
+        .andReturn();
+  }
+
+  @Test
+  @DisplayName("공지사항 첨부파일 다운로드(B06)")
   void downloadAttachment() throws Exception {
 
     // GIVEN
     User user = getSampleUser();
-    String noticeId = addSampleNotice(user.getEmail());
+    String noticeId = addSampleNotice(user.getId());
 
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
@@ -272,25 +301,25 @@ class NoticeControllerTest extends ControllerSupportTest {
   }
 
   @Test
-  @DisplayName("공지사항 첨부파일 삭제(B06)")
-  void removeAttachment() throws Exception {
+  @DisplayName("공지사항 첨부파일 삭제(B07)")
+  void deleteAttachment() throws Exception {
 
     // GIVEN
     User user = getSampleUser();
-    String noticeId = addSampleNotice(user.getEmail());
+    String noticeId = addSampleNotice(user.getId());
 
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
     // WHEN
-    ResultActions result = mvc.perform(post("/notices/{noticeId}/attachments/{attachmentId}", noticeId, attachmentId)
+    ResultActions result = mvc.perform(delete("/notices/{noticeId}/attachments/{attachmentId}", noticeId, attachmentId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON));
 
     // THEN
     result.andExpect(status().isOk())
         .andDo(print())
-        .andDo(document("notice-attachment-remove",
+        .andDo(document("notice-attachment-delete",
             requestHeaders(
                 headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON),
                 headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
@@ -306,12 +335,12 @@ class NoticeControllerTest extends ControllerSupportTest {
         .andReturn();
   }
 
-  private String addSampleNotice(String email) {
+  private String addSampleNotice(String userId) {
     NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
     noticeRequestVO.setTitle("New Title");
     noticeRequestVO.setContent("New Content");
     noticeRequestVO.setMultipartFiles(getSampleFiles());
-    return noticeService.addNotice(email, noticeRequestVO);
+    return noticeService.addNotice(userId, noticeRequestVO);
   }
 
   private List<MultipartFile> getSampleFiles() {

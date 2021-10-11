@@ -131,8 +131,30 @@ include::{snippets}/notice-all-find/http-response.adoc[]
 Response Fields:
 include::{snippets}/notice-all-find/response-fields.adoc[]
 
+[[notice-delete]]
+=== 공지사항 삭제(B06)
+==== Request
+Request HTTP Example:
+include::{snippets}/notice-delete/http-request.adoc[]
+
+Header :
+include::{snippets}/notice-delete/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/notice-delete/path-parameters.adoc[]
+
+CURL :
+include::{snippets}/notice-delete/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/notice-delete/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/notice-delete/response-fields.adoc[]
+
 [[notice-attachment-download]]
-=== 공지사항 첨부파일 다운로드(B05)
+=== 공지사항 첨부파일 다운로드(B06)
 ==== Request
 Request HTTP Example:
 include::{snippets}/notice-attachment-download/http-request.adoc[]
@@ -150,24 +172,24 @@ include::{snippets}/notice-attachment-download/curl-request.adoc[]
 Response HTTP Example:
 include::{snippets}/notice-attachment-download/http-response.adoc[]
 
-[[notice-attachment-remove]]
-=== 공지사항 첨부파일 삭제(B06)
+[[notice-attachment-delte]]
+=== 공지사항 첨부파일 삭제(B07)
 ==== Request
 Request HTTP Example:
-include::{snippets}/notice-attachment-remove/http-request.adoc[]
+include::{snippets}/notice-attachment-delete/http-request.adoc[]
 
 Header :
-include::{snippets}/notice-attachment-remove/request-headers.adoc[]
+include::{snippets}/notice-attachment-delete/request-headers.adoc[]
 
 Path Parameters :
-include::{snippets}/notice-attachment-remove/path-parameters.adoc[]
+include::{snippets}/notice-attachment-delete/path-parameters.adoc[]
 
 CURL :
-include::{snippets}/notice-attachment-remove/curl-request.adoc[]
+include::{snippets}/notice-attachment-delete/curl-request.adoc[]
 
 ==== Response
 Response HTTP Example:
-include::{snippets}/notice-attachment-remove/http-response.adoc[]
+include::{snippets}/notice-attachment-delete/http-response.adoc[]
 
 Response Fields:
-include::{snippets}/notice-attachment-remove/response-fields.adoc[]
+include::{snippets}/notice-attachment-delete/response-fields.adoc[]

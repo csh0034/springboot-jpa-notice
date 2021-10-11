@@ -66,7 +66,9 @@ public final class FileUtils extends org.apache.commons.io.FileUtils {
 
     try {
       boolean delete = file.delete();
-      if (!delete) {
+      if (delete) {
+        log.debug("file deleted...({}) ", savedFileDir);
+      } else {
         log.debug("file not deleted");
       }
     } catch (SecurityException e) {

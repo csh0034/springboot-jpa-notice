@@ -4,6 +4,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.ask.sample.constant.Constants.Role;
 import com.ask.sample.util.IdGenerator;
+import com.ask.sample.util.SecurityUtils;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -85,17 +86,23 @@ public class User extends BaseEntity implements UserDetails {
     return true;
   }
 
-  public static User create(String email, String password, Role role, String name) {
+  public static User create(String email, String rawPassword, Role role, String name) {
     User user = new User();
     user.email = email;
-    user.password = password;
+    user.password = user.encodePassword(rawPassword);
     user.role = role;
     user.name = name;
     user.enabled = true;
     return user;
   }
 
-  public void changePassword(String newPassword) {
-    this.password = newPassword;
+  public void update(String email, String rawPassword, String name) {
+    this.email = email;
+    this.password = encodePassword(rawPassword);
+    this.name = name;
+  }
+
+  private String encodePassword(String rawPassword) {
+    return SecurityUtils.passwordEncode(rawPassword);
   }
 }

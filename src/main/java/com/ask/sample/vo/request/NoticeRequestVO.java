@@ -18,7 +18,5 @@ public class NoticeRequestVO {
   @NotBlank
   private String content;
 
-  private String noticeId;
-
   private List<MultipartFile> multipartFiles;
 }

@@ -8,6 +8,7 @@ import com.ask.sample.constant.Constants.Role;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
 import com.ask.sample.util.SecurityUtils;
+import com.ask.sample.vo.request.UserRequestVO;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,36 +25,36 @@ class UserServiceTest {
   @Autowired
   UserRepository userRepository;
 
-  @Autowired
-  EntityManager em;
-
   @Test
   void joinUser() {
     // GIVEN
-    User user = createTestUser();
+    UserRequestVO requestVO = createUserRequestVO();
 
     // WHEN
-    String id = userService.addUser(user);
+    String id = userService.addUser(requestVO);
 
     // THEN
-    em.flush();
-    assertThat(user).isEqualTo(userRepository.findById(id).get());
+    assertThat(userRepository.existsById(id)).isTrue();
   }
 
   @Test
   void throwDuplicateUser() {
     // GIVEN
-    User user1 = createTestUser();
-    User user2 = createTestUser();
+    UserRequestVO requestVO1 = createUserRequestVO();
+    UserRequestVO requestVO2 = createUserRequestVO();
 
     // WHEN
-    userService.addUser(user1);
+    userService.addUser(requestVO1);
 
     // THEN
-    assertThatExceptionOfType(BusinessException.class).isThrownBy(() -> userService.addUser(user2));
+    assertThatExceptionOfType(BusinessException.class).isThrownBy(() -> userService.addUser(requestVO2));
   }
 
-  private User createTestUser() {
-    return User.create("user01@rsupport.com", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
+  private UserRequestVO createUserRequestVO() {
+    UserRequestVO requestVO = new UserRequestVO();
+    requestVO.setEmail("sample01@gmail.com");
+    requestVO.setPassword("sample-password");
+    requestVO.setName("sample-name");
+    return requestVO;
   }
 }
