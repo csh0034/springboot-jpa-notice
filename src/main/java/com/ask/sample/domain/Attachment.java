@@ -4,6 +4,7 @@ import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.ask.sample.util.StringUtils;
+import java.io.File;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -58,7 +59,7 @@ public class Attachment extends BaseEntity implements Persistable<String> {
     attachment.contentType = multipartFile.getContentType();
     attachment.fileSize = multipartFile.getSize();
     attachment.downloadCnt = 0L;
-    attachment.savedFileDir = uploadDir + System.getProperty("file.separator") + attachment.id;
+    attachment.savedFileDir = uploadDir + File.separator + attachment.id;
     return attachment;
   }
 

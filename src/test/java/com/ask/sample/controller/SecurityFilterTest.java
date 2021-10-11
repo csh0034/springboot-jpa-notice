@@ -27,7 +27,7 @@ public class SecurityFilterTest extends ControllerSupportTest {
 
     // GIVEN
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add(Constants.LOGIN_ID_PARAMETER, GIVEN_LOGIN_ID);
+    params.add(Constants.EMAIL_PARAMETER, GIVEN_EMAIL);
     params.add(Constants.PASSWORD_PARAMETER, GIVEN_PASSWORD);
 
     // WHEN
@@ -40,7 +40,7 @@ public class SecurityFilterTest extends ControllerSupportTest {
         .andDo(print())
         .andDo(document("user-login",
             requestParameters(
-                parameterWithName(Constants.LOGIN_ID_PARAMETER).description("로그인 ID")
+                parameterWithName(Constants.EMAIL_PARAMETER).description("로그인 ID")
                     .attributes(new Attributes.Attribute("validation", "NotBlank")),
                 parameterWithName(Constants.PASSWORD_PARAMETER).description("패스워드")
                     .attributes(new Attributes.Attribute("validation", "NotBlank"))

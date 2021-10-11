@@ -1,10 +1,12 @@
 package com.ask.sample.service;
 
 import com.ask.sample.advice.exception.BusinessException;
+import com.ask.sample.advice.exception.EntityNotFoundException;
 import com.ask.sample.constant.ResponseCode;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.UserRepository;
-import java.util.List;
+import com.ask.sample.vo.request.UserRequestVO;
+import com.ask.sample.vo.response.UserResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,23 +19,27 @@ public class UserService implements UserDetailsService {
 
   private final UserRepository userRepository;
 
-  public String join(User user) {
-
-    validateDuplicateMember(user);
-
+  public String addUser(User user) {
+    validateDuplicateMember(user.getEmail());
     userRepository.save(user);
     return user.getId();
   }
 
-  private void validateDuplicateMember(User user) {
-    List<User> findUsers = userRepository.findAllByLoginId(user.getLoginId());
-    if (!findUsers.isEmpty()) {
-      throw new BusinessException(ResponseCode.LOGIN_ID_DUPLICATED);
+  public UserResponseVO findUser(String userId) {
+    User user = userRepository.findById(userId)
+        .filter(User::isEnabled)
+        .orElseThrow(() -> new EntityNotFoundException("user not found : " + userId));
+    return UserResponseVO.of(user);
+  }
+
+  private void validateDuplicateMember(String email) {
+    if (userRepository.existsByEmail(email)) {
+      throw new BusinessException(ResponseCode.EMAIL_DUPLICATED);
     }
   }
 
   @Override
-  public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-    return userRepository.findByLoginIdAndEnabledIsTrue(loginId).orElseThrow(() -> new UsernameNotFoundException("NOT_FOUND"));
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    return userRepository.findByEmailAndEnabledIsTrue(email).orElseThrow(() -> new UsernameNotFoundException("NOT_FOUND"));
   }
 }

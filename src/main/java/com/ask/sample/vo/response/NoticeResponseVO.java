@@ -18,7 +18,7 @@ import lombok.ToString;
 
 @Setter
 @Getter
-@ToString(callSuper = true)
+@ToString
 @NoArgsConstructor
 public class NoticeResponseVO implements Serializable {
 
@@ -53,19 +53,19 @@ public class NoticeResponseVO implements Serializable {
     this.createdBy = createdBy;
   }
 
-  public static NoticeResponseVO from(Notice notice, String serverUrl) {
+  public static NoticeResponseVO of(Notice notice, String serverUrl) {
     NoticeResponseVO vo = new NoticeResponseVO();
     vo.id = notice.getId();
     vo.title = notice.getTitle();
     vo.content = notice.getContent();
     vo.readCnt = notice.getReadCnt();
     vo.fileCnt = notice.getAttachments().size();
-    vo.createdDt = notice.getCreatedDt();
     vo.createdBy = notice.getCreatedBy();
+    vo.createdDt = notice.getCreatedDt();
     vo.files = notice.getAttachments().stream()
         .map(attachment -> {
           String fileUrl = String.format("%s/notice/%s/attachment/%s", serverUrl, notice.getId(), attachment.getId());
-          return AttachmentResponseVO.from(attachment, fileUrl);
+          return AttachmentResponseVO.of(attachment, fileUrl);
         }).collect(toList());
 
     return vo;

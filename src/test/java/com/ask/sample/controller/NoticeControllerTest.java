@@ -61,7 +61,7 @@ class NoticeControllerTest extends ControllerSupportTest {
 
   @BeforeEach
   void setup() {
-    accessToken = jwtUtils.generate(JwtUser.of(GIVEN_USER_ID, GIVEN_LOGIN_ID, "ROLE_USER"));
+    accessToken = jwtUtils.generate(JwtUser.of(GIVEN_USER_ID, GIVEN_EMAIL, "ROLE_USER"));
   }
 
   @Test
@@ -81,7 +81,7 @@ class NoticeControllerTest extends ControllerSupportTest {
         "File 3".getBytes());
 
     // WHEN
-    ResultActions result = mvc.perform(fileUpload("/notice")
+    ResultActions result = mvc.perform(fileUpload("/notices")
         .file(mockFile1)
         .file(mockFile2)
         .file(mockFile3)
@@ -122,7 +122,7 @@ class NoticeControllerTest extends ControllerSupportTest {
         "SAMPLE".getBytes());
 
     // WHEN
-    ResultActions result = mvc.perform(fileUpload("/notice/update")
+    ResultActions result = mvc.perform(fileUpload("/notices/update")
         .file(mockFile)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .params(params)
@@ -153,10 +153,10 @@ class NoticeControllerTest extends ControllerSupportTest {
   void findNotice() throws Exception {
 
     // GIVEN
-    String noticeId = addSampleNotice(GIVEN_LOGIN_ID);
+    String noticeId = addSampleNotice(GIVEN_EMAIL);
 
     // WHEN
-    ResultActions result = mvc.perform(get("/notice/{noticeId}", noticeId)
+    ResultActions result = mvc.perform(get("/notices/{noticeId}", noticeId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
@@ -195,7 +195,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     }
 
     // WHEN
-    ResultActions result = mvc.perform(get("/notice")
+    ResultActions result = mvc.perform(get("/notices")
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .queryParams(params)
         .contentType(MediaType.APPLICATION_JSON)
@@ -239,13 +239,13 @@ class NoticeControllerTest extends ControllerSupportTest {
 
     // GIVEN
     User user = getSampleUser();
-    String noticeId = addSampleNotice(user.getLoginId());
+    String noticeId = addSampleNotice(user.getEmail());
 
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
     // WHEN
-    ResultActions result = mvc.perform(get("/notice/{noticeId}/attachment/{attachmentId}", noticeId, attachmentId)
+    ResultActions result = mvc.perform(get("/notices/{noticeId}/attachments/{attachmentId}", noticeId, attachmentId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON));
 
@@ -277,13 +277,13 @@ class NoticeControllerTest extends ControllerSupportTest {
 
     // GIVEN
     User user = getSampleUser();
-    String noticeId = addSampleNotice(user.getLoginId());
+    String noticeId = addSampleNotice(user.getEmail());
 
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
     // WHEN
-    ResultActions result = mvc.perform(post("/notice/{noticeId}/attachment/{attachmentId}", noticeId, attachmentId)
+    ResultActions result = mvc.perform(post("/notices/{noticeId}/attachments/{attachmentId}", noticeId, attachmentId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON));
 
@@ -306,12 +306,12 @@ class NoticeControllerTest extends ControllerSupportTest {
         .andReturn();
   }
 
-  private String addSampleNotice(String loginId) {
+  private String addSampleNotice(String email) {
     NoticeRequestVO noticeRequestVO = new NoticeRequestVO();
     noticeRequestVO.setTitle("New Title");
     noticeRequestVO.setContent("New Content");
     noticeRequestVO.setMultipartFiles(getSampleFiles());
-    return noticeService.addNotice(loginId, noticeRequestVO);
+    return noticeService.addNotice(email, noticeRequestVO);
   }
 
   private List<MultipartFile> getSampleFiles() {

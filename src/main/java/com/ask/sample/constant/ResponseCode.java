@@ -14,7 +14,7 @@ public enum ResponseCode {
   JWT_VERIFY_FAILED(HttpStatus.OK, "40502", "jwt verify failed"),
   FORBIDDEN(HttpStatus.FORBIDDEN, "40503", "forbidden"),
 
-  LOGIN_ID_DUPLICATED(HttpStatus.OK, "40601", "loginId duplicated"),
+  EMAIL_DUPLICATED(HttpStatus.OK, "40601", "email duplicated"),
 
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "40999", "Internal Server Error");
 

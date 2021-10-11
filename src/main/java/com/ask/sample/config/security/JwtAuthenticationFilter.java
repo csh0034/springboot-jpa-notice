@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
     super(authenticationManager);
     this.jwtUtils = jwtUtils;
-    this.setUsernameParameter(Constants.LOGIN_ID_PARAMETER);
+    this.setUsernameParameter(Constants.EMAIL_PARAMETER);
     this.setPasswordParameter(Constants.PASSWORD_PARAMETER);
   }
 
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     User user = (User) authResult.getPrincipal();
 
-    JwtUser jwtUser = JwtUser.of(user.getId(), user.getLoginId(), user.getAuthorityString());
+    JwtUser jwtUser = JwtUser.of(user.getId(), user.getEmail(), user.getRole().name());
     String token = jwtUtils.generate(jwtUser);
 
     ResponseUtils.writeJson(response, CommonResponseVO.ok(token));

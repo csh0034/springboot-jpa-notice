@@ -27,11 +27,11 @@ public abstract class BaseEntity implements Serializable {
   @LastModifiedDate
   protected LocalDateTime modifiedDt;
 
-  @Column
+  @Column(length = 50)
   @CreatedBy
   protected String createdBy;
 
-  @Column
+  @Column(length = 50)
   @LastModifiedBy
   protected String modifiedBy;
 }

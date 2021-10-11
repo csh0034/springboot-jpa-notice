@@ -32,12 +32,12 @@ public abstract class ControllerSupportTest {
   private UserRepository userRepository;
 
   protected static final String GIVEN_USER_ID = "user-01";
-  protected static final String GIVEN_LOGIN_ID = "user-01";
+  protected static final String GIVEN_EMAIL = "user01@gmail.com";
   protected static final String GIVEN_PASSWORD = "1234";
   protected static final String GIVEN_NOTICE_ID = "notice-01";
 
   protected User getSampleUser() {
-    return userRepository.findByLoginIdAndEnabledIsTrue(GIVEN_LOGIN_ID)
+    return userRepository.findByEmailAndEnabledIsTrue(GIVEN_EMAIL)
         .orElseThrow(() -> new EntityNotFoundException("user not found"));
   }
 }

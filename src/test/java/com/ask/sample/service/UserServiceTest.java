@@ -33,7 +33,7 @@ class UserServiceTest {
     User user = createTestUser();
 
     // WHEN
-    String id = userService.join(user);
+    String id = userService.addUser(user);
 
     // THEN
     em.flush();
@@ -47,13 +47,13 @@ class UserServiceTest {
     User user2 = createTestUser();
 
     // WHEN
-    userService.join(user1);
+    userService.addUser(user1);
 
     // THEN
-    assertThatExceptionOfType(BusinessException.class).isThrownBy(() -> userService.join(user2));
+    assertThatExceptionOfType(BusinessException.class).isThrownBy(() -> userService.addUser(user2));
   }
 
   private User createTestUser() {
-    return User.create("loginId1", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
+    return User.create("user01@rsupport.com", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
   }
 }

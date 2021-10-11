@@ -20,12 +20,12 @@ public class JwtUser {
 
   private String id;
 
-  private String loginId;
+  private String email;
 
   private String authority;
 
-  public static JwtUser of(String id, String loginId, String authority) {
-    return new JwtUser(id, loginId, authority);
+  public static JwtUser of(String id, String email, String authority) {
+    return new JwtUser(id, email, authority);
   }
 
   @JsonIgnore

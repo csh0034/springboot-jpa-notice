@@ -12,11 +12,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,27 +40,34 @@ public class User extends BaseEntity implements UserDetails {
       parameters = @Parameter(name = IdGenerator.PARAM_KEY, value = "user-")
   )
   @GeneratedValue(generator = "userIdGenerator")
-  @Column(name = "user_id")
+  @Column(name = "user_id", length = 50)
   @EqualsAndHashCode.Include
   private String id;
 
-  @Column(unique = true, nullable = false)
-  private String loginId;
+  @Column(unique = true, nullable = false, length = 30)
+  private String email;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 100)
   private String password;
 
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  private Role authority;
+  @Column(nullable = false, length = 15)
+  private Role role;
 
-  private String username;
+  @Column(nullable = false, length = 20)
+  private String name;
 
+  @ColumnDefault("0")
   private boolean enabled;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return AuthorityUtils.createAuthorityList(authority.name());
+    return AuthorityUtils.createAuthorityList(role.name());
+  }
+
+  @Override
+  public String getUsername() {
+    return email;
   }
 
   @Override
@@ -78,17 +85,12 @@ public class User extends BaseEntity implements UserDetails {
     return true;
   }
 
-  @Transient
-  public String getAuthorityString() {
-    return authority.name();
-  }
-
-  public static User create(String loginId, String password, Role authority, String userNm) {
+  public static User create(String email, String password, Role role, String name) {
     User user = new User();
-    user.loginId = loginId;
+    user.email = email;
     user.password = password;
-    user.authority = authority;
-    user.username = userNm;
+    user.role = role;
+    user.name = name;
     user.enabled = true;
     return user;
   }

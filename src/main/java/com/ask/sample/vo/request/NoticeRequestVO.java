@@ -7,8 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
-@Setter
 @Getter
+@Setter
 @ToString
 public class NoticeRequestVO {
 

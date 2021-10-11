@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Setter
 @Getter
-@ToString(callSuper = true)
+@ToString
 public class AttachmentResponseVO implements Serializable {
 
   private static final long serialVersionUID = -2551620172313279020L;
@@ -30,15 +30,15 @@ public class AttachmentResponseVO implements Serializable {
 
   private LocalDateTime createdDt;
 
-  public static AttachmentResponseVO from(Attachment attachment, String fileUrl) {
+  public static AttachmentResponseVO of(Attachment attachment, String fileUrl) {
     AttachmentResponseVO vo = new AttachmentResponseVO();
     vo.id = attachment.getId();
     vo.fileNm = attachment.getFileNm();
     vo.contentType = attachment.getContentType();
     vo.downloadCnt = attachment.getDownloadCnt();
     vo.fileUrl = fileUrl;
-    vo.createdDt = attachment.getCreatedDt();
     vo.createdBy = attachment.getCreatedBy();
+    vo.createdDt = attachment.getCreatedDt();
     return vo;
   }
 

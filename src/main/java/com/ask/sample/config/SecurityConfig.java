@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,24 +35,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .headers()
-          .frameOptions().sameOrigin()
-        .and()
-          .csrf().disable()
-          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-          .cors()
-        .and()
-          .authorizeRequests()
-            .anyRequest().hasRole("USER")
-        .and()
-          .exceptionHandling()
+        .headers().frameOptions().sameOrigin().and()
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        .cors().and()
+        .authorizeRequests()
+          .antMatchers("/notices/**").hasRole("USER")
+          //.antMatchers(HttpMethod.PUT, "/users").hasRole("USER")
+          .anyRequest().permitAll().and()
+        .exceptionHandling()
           .accessDeniedHandler(new JwtExceptionHandler())
-          .authenticationEntryPoint(new JwtExceptionHandler())
-        .and()
-          .logout().disable()
-          .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtils))
-          .addFilter(new JwtVerifyFilter(jwtUtils));
+          .authenticationEntryPoint(new JwtExceptionHandler()).and()
+        .logout().disable()
+        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtils))
+        .addFilter(new JwtVerifyFilter(jwtUtils));
   }
 
   @Bean

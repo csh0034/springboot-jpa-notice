@@ -12,7 +12,7 @@ import java.util.Date;
 public final class JwtUtils {
 
   private static final String ID_KEY = "id";
-  private static final String LOGIN_ID_KEY = "loginId";
+  private static final String EMAIL_KEY = "email";
   private static final String AUTHORITY_KEY = "authority";
 
   private final Algorithm algorithm;
@@ -29,7 +29,7 @@ public final class JwtUtils {
 
     String token = JWT.create()
         .withClaim(ID_KEY, jwtUser.getId())
-        .withClaim(LOGIN_ID_KEY, jwtUser.getLoginId())
+        .withClaim(EMAIL_KEY, jwtUser.getEmail())
         .withClaim(AUTHORITY_KEY, jwtUser.getAuthority())
         .withExpiresAt(expiresAt)
         .withIssuedAt(now)
@@ -45,9 +45,9 @@ public final class JwtUtils {
 
     DecodedJWT jwt = JWT.decode(token);
     String id = jwt.getClaim(ID_KEY).asString();
-    String loginId = jwt.getClaim(LOGIN_ID_KEY).asString();
+    String email = jwt.getClaim(EMAIL_KEY).asString();
     String authority = jwt.getClaim(AUTHORITY_KEY).asString();
 
-    return JwtUser.of(id, loginId, authority);
+    return JwtUser.of(id, email, authority);
   }
 }

@@ -26,15 +26,15 @@ public class NoticeController {
 
   private final NoticeService noticeService;
 
-  @PostMapping("/notice")
+  @PostMapping("/notices")
   public CommonResponseVO<NoticeResponseVO> addNotice(@Valid NoticeRequestVO noticeRequestVO) {
     JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-    String noticeId = noticeService.addNotice(jwtUser.getLoginId(), noticeRequestVO);
+    String noticeId = noticeService.addNotice(jwtUser.getEmail(), noticeRequestVO);
     NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, false);
     return CommonResponseVO.ok(noticeResponseVO);
   }
 
-  @PostMapping("/notice/update")
+  @PostMapping("/notices/update")
   public CommonResponseVO<NoticeResponseVO> updateNotice(NoticeRequestVO noticeRequestVO, BindingResult bindingResult) {
     InvalidationException ies = new InvalidationException(bindingResult);
 
@@ -47,29 +47,29 @@ public class NoticeController {
     }
 
     JwtUser jwtUser = SecurityUtils.getCurrentJwtUser();
-    String noticeId = noticeService.updateNotice(jwtUser.getLoginId(), noticeRequestVO);
+    String noticeId = noticeService.updateNotice(jwtUser.getEmail(), noticeRequestVO);
     NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, false);
     return CommonResponseVO.ok(noticeResponseVO);
   }
 
-  @GetMapping("/notice/{noticeId}")
+  @GetMapping("/notices/{noticeId}")
   public CommonResponseVO<NoticeResponseVO> findNotice(@PathVariable String noticeId) {
     NoticeResponseVO noticeResponseVO = noticeService.findNotice(noticeId, true);
     return CommonResponseVO.ok(noticeResponseVO);
   }
 
-  @GetMapping("/notice")
+  @GetMapping("/notices")
   public CommonPageResponseVO<NoticeResponseVO> findNotices(String title, Pageable pageable) {
     Page<NoticeResponseVO> notices = noticeService.findNotices(title, pageable);
     return CommonPageResponseVO.ok(notices);
   }
 
-  @GetMapping("/notice/{noticeId}/attachment/{attachmentId}")
+  @GetMapping("/notices/{noticeId}/attachments/{attachmentId}")
   public void downloadAttachment(HttpServletResponse response, @PathVariable String noticeId, @PathVariable String attachmentId) {
     noticeService.downloadAttachment(response, noticeId, attachmentId);
   }
 
-  @PostMapping("/notice/{noticeId}/attachment/{attachmentId}")
+  @PostMapping("/notices/{noticeId}/attachments/{attachmentId}")
   public CommonResponseVO<Void> removeAttachment(@PathVariable String noticeId, @PathVariable String attachmentId) {
     noticeService.removeAttachment(noticeId, attachmentId);
     return CommonResponseVO.ok();

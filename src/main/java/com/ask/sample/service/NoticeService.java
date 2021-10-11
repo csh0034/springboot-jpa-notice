@@ -17,6 +17,7 @@ import com.ask.sample.vo.request.NoticeRequestVO;
 import com.ask.sample.vo.response.NoticeResponseVO;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,8 +34,8 @@ public class NoticeService {
   private final UserRepository userRepository;
   private final SettingProperties settingProperties;
 
-  public String addNotice(String loginId, NoticeRequestVO noticeRequestVO) {
-    User user = getEnabledUser(loginId);
+  public String addNotice(String email, NoticeRequestVO noticeRequestVO) {
+    User user = getEnabledUser(email);
 
     List<Attachment> attachments = upload(noticeRequestVO.getMultipartFiles());
 
@@ -45,8 +46,8 @@ public class NoticeService {
     return notice.getId();
   }
 
-  public String updateNotice(String loginId, NoticeRequestVO noticeRequestVO) {
-    User user = getEnabledUser(loginId);
+  public String updateNotice(String email, NoticeRequestVO noticeRequestVO) {
+    User user = getEnabledUser(email);
 
     Notice notice = getNotice(noticeRequestVO.getNoticeId());
 
@@ -61,9 +62,9 @@ public class NoticeService {
     return notice.getId();
   }
 
-  private User getEnabledUser(String loginId) {
-    return userRepository.findByLoginIdAndEnabledIsTrue(loginId)
-        .orElseThrow(() -> new EntityNotFoundException("user not found : " + loginId));
+  private User getEnabledUser(String email) {
+    return userRepository.findByEmailAndEnabledIsTrue(email)
+        .orElseThrow(() -> new EntityNotFoundException("user not found : " + email));
   }
 
   private Notice getNotice(String noticeId) {
@@ -77,7 +78,7 @@ public class NoticeService {
     }
 
     return multipartFiles.stream()
-        .filter(multipartFile -> !multipartFile.isEmpty())
+        .filter(Predicate.not(MultipartFile::isEmpty))
         .map(multipartFile -> {
           Attachment attachment = Attachment.create(multipartFile, settingProperties.getUploadDir());
           FileUtils.upload(multipartFile, settingProperties.getUploadDir(), attachment.getSavedFileDir());
@@ -93,7 +94,7 @@ public class NoticeService {
       notice.increaseReadCnt();
     }
 
-    return NoticeResponseVO.from(notice, settingProperties.getServerUrl());
+    return NoticeResponseVO.of(notice, settingProperties.getServerUrl());
   }
 
   public Page<NoticeResponseVO> findNotices(String title, Pageable pageable) {
