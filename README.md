@@ -37,5 +37,8 @@ $ java -jar build/libs/springboot-jpa-notice-0.0.1-SNAPSHOT.jar
 ```
 
 ## RestDocs
-[http://localhost:8080/docs/index.html](http://localhost:8080/docs/index.html)
-> executable jar 실행시에만 접근 가능
+- Local
+  - [http://localhost:8080/docs/index.html](http://localhost:8080/docs/index.html)
+  - executable jar 실행시에만 접근 가능
+- Sample
+  - [Github Pages](https://csh0034.github.io/springboot-jpa-notice)
