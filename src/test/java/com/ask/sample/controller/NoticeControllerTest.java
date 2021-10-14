@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ask.sample.common.ControllerSupportTest;
 import com.ask.sample.config.security.JwtUser;
 import com.ask.sample.constant.Constants;
-import com.ask.sample.doc.RestDocs;
+import com.ask.sample.constant.RestDocs;
 import com.ask.sample.domain.Notice;
 import com.ask.sample.domain.User;
 import com.ask.sample.repository.NoticeRepository;
@@ -258,8 +258,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 fieldWithPath("timestamp").description("응답시간"),
                 fieldWithPath("code").description("응답코드")
             )
-        ))
-        .andReturn();
+        ));
   }
 
   @Test
@@ -330,8 +329,7 @@ class NoticeControllerTest extends ControllerSupportTest {
                 fieldWithPath("timestamp").description("응답시간"),
                 fieldWithPath("code").description("응답코드")
             )
-        ))
-        .andReturn();
+        ));
   }
 
   private String addSampleNotice(String userId) {

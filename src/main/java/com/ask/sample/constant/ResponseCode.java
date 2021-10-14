@@ -1,7 +1,11 @@
 package com.ask.sample.constant;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+@RequiredArgsConstructor
+@Getter
 public enum ResponseCode {
 
   OK(HttpStatus.OK, "40100", "OK"),
@@ -21,22 +25,4 @@ public enum ResponseCode {
   private final HttpStatus status;
   private final String code;
   private final String message;
-
-  ResponseCode(final HttpStatus status, final String code, final String message) {
-    this.status = status;
-    this.message = message;
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return this.message;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public HttpStatus getStatus() {
-    return status;
-  }
 }

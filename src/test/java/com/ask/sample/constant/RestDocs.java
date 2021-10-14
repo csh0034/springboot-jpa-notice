@@ -1,8 +1,7 @@
-package com.ask.sample.doc;
+package com.ask.sample.constant;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-import com.ask.sample.constant.Constants;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 public class RestDocs {

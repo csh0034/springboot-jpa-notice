@@ -17,8 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ask.sample.common.ControllerSupportTest;
 import com.ask.sample.config.security.JwtUser;
-import com.ask.sample.doc.RestDocs;
-import com.ask.sample.repository.UserRepository;
+import com.ask.sample.constant.RestDocs;
 import com.ask.sample.service.UserService;
 import com.ask.sample.util.JwtUtils;
 import com.ask.sample.vo.request.UserRequestVO;

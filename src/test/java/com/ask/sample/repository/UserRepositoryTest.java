@@ -3,7 +3,7 @@ package com.ask.sample.repository;
 import static com.ask.sample.constant.Constants.Role;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ask.sample.common.TestConfig;
+import com.ask.sample.common.QuerydslConfig;
 import com.ask.sample.domain.User;
 import com.ask.sample.util.SecurityUtils;
 import javax.persistence.EntityManager;
@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
-@Import(TestConfig.class)
+@Import(QuerydslConfig.class)
 class UserRepositoryTest {
 
   @Autowired
