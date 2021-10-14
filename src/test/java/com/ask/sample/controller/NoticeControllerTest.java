@@ -223,7 +223,8 @@ class NoticeControllerTest extends ControllerSupportTest {
                 fieldWithPath("page.size").description("페이지당 출력수"),
                 fieldWithPath("page.totalElements").description("검색된 전체 요소 개수"),
                 fieldWithPath("page.totalPages").description("전체 페이지 수"),
-                fieldWithPath("page.currentPage").description("현재 페이지의 번호 (0부터 시작)"))
+                fieldWithPath("page.currentPage").description("현재 페이지의 번호 (0부터 시작)")
+            )
         ));
   }
 
@@ -252,7 +253,8 @@ class NoticeControllerTest extends ControllerSupportTest {
             ),
             responseFields(
                 fieldWithPath("timestamp").description("응답시간"),
-                fieldWithPath("code").description("응답코드"))
+                fieldWithPath("code").description("응답코드")
+            )
         ))
         .andReturn();
   }
@@ -323,7 +325,8 @@ class NoticeControllerTest extends ControllerSupportTest {
             ),
             responseFields(
                 fieldWithPath("timestamp").description("응답시간"),
-                fieldWithPath("code").description("응답코드"))
+                fieldWithPath("code").description("응답코드")
+            )
         ))
         .andReturn();
   }
