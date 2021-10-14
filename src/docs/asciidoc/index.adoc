@@ -20,7 +20,7 @@ Spring boot JPA Notice API
 
 == User (A)
 
-=== AccessToken 발급 (A01)
+=== AccessToken 발급 (A00)
 ==== Request
 Request HTTP Example:
 include::{snippets}/user-login/http-request.adoc[]
@@ -37,6 +37,72 @@ include::{snippets}/user-login/http-response.adoc[]
 
 Response Fields:
 include::{snippets}/user-login/response-fields.adoc[]
+
+=== 유저 등록 (A01)
+==== Request
+Request HTTP Example:
+include::{snippets}/user-add/http-request.adoc[]
+
+Header :
+include::{snippets}/user-add/request-headers.adoc[]
+
+Request Fields :
+include::{snippets}/user-add/request-fields.adoc[]
+
+CURL :
+include::{snippets}/user-add/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/user-add/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/user-add/response-fields.adoc[]
+
+=== 유저 수정 (A02)
+==== Request
+Request HTTP Example:
+include::{snippets}/user-update/http-request.adoc[]
+
+Header :
+include::{snippets}/user-update/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/user-update/path-parameters.adoc[]
+
+Request Fields :
+include::{snippets}/user-add/request-fields.adoc[]
+
+CURL :
+include::{snippets}/user-update/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/user-update/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/user-update/response-fields.adoc[]
+
+=== 유저 삭제 (A03)
+==== Request
+Request HTTP Example:
+include::{snippets}/user-delete/http-request.adoc[]
+
+Header :
+include::{snippets}/user-delete/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/user-delete/path-parameters.adoc[]
+
+CURL :
+include::{snippets}/user-delete/curl-request.adoc[]
+
+==== Response
+Response HTTP Example:
+include::{snippets}/user-delete/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/user-delete/response-fields.adoc[]
 
 
 == Notice (B)
@@ -72,6 +138,9 @@ include::{snippets}/notice-update/http-request.adoc[]
 
 Header :
 include::{snippets}/notice-update/request-headers.adoc[]
+
+Path Parameters :
+include::{snippets}/notice-update/path-parameters.adoc[]
 
 Request Parameters :
 include::{snippets}/notice-update/request-parameters.adoc[]

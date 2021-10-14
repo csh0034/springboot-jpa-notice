@@ -22,7 +22,7 @@ import org.springframework.util.MultiValueMap;
 public class SecurityFilterTest extends ControllerSupportTest {
 
   @Test
-  @DisplayName("유저 로그인(A01)")
+  @DisplayName("유저 로그인(A00)")
   void userLogin() throws Exception {
     // given
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

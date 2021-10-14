@@ -39,6 +39,7 @@ public class JpaConfig {
   @Bean
   public AuditorAware<String> auditorAware() {
     return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+        .filter(authentication -> authentication instanceof JwtUser)
         .map(authentication -> ((JwtUser) authentication.getPrincipal()).getUserId());
   }
 

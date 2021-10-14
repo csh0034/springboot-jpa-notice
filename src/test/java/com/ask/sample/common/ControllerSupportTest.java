@@ -29,7 +29,7 @@ public abstract class ControllerSupportTest {
   protected EntityManager em;
 
   @Autowired
-  private UserRepository userRepository;
+  protected UserRepository userRepository;
 
   protected static final String GIVEN_USER_ID = "user-01";
   protected static final String GIVEN_EMAIL = "user01@gmail.com";
