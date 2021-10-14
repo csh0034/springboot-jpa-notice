@@ -18,6 +18,11 @@ v0.0.1-SNAPSHOT
 
 Spring boot JPA Notice API
 
+== Common
+=== Response Code
+include::{snippets}/common/custom-response-fields-responseCodes.adoc[]
+
+
 == User (A)
 
 === AccessToken 발급 (A00)
