@@ -27,26 +27,26 @@ class UserServiceTest {
 
   @Test
   void joinUser() {
-    // GIVEN
+    // given
     UserRequestVO requestVO = createUserRequestVO();
 
-    // WHEN
+    // when
     String id = userService.addUser(requestVO);
 
-    // THEN
+    // then
     assertThat(userRepository.existsById(id)).isTrue();
   }
 
   @Test
   void throwDuplicateUser() {
-    // GIVEN
+    // given
     UserRequestVO requestVO1 = createUserRequestVO();
     UserRequestVO requestVO2 = createUserRequestVO();
 
-    // WHEN
+    // when
     userService.addUser(requestVO1);
 
-    // THEN
+    // then
     assertThatExceptionOfType(BusinessException.class).isThrownBy(() -> userService.addUser(requestVO2));
   }
 

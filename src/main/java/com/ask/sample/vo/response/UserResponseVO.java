@@ -22,8 +22,6 @@ public class UserResponseVO implements Serializable {
 
   private String email;
 
-  private String role;
-
   private String name;
 
   private String createdBy;
@@ -34,7 +32,6 @@ public class UserResponseVO implements Serializable {
     UserResponseVO vo = new UserResponseVO();
     vo.id = user.getId();
     vo.email = user.getEmail();
-    vo.role = user.getRole().name();
     vo.name = user.getName();
     vo.createdBy = user.getCreatedBy();
     vo.createdDt = user.getCreatedDt();

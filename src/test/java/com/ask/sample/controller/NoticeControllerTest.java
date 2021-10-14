@@ -67,8 +67,7 @@ class NoticeControllerTest extends ControllerSupportTest {
   @Test
   @DisplayName("공지사항 등록(B01)")
   void addNotice() throws Exception {
-
-    // GIVEN
+    // given
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("title", "Test Title");
     params.add("content", "Test Content");
@@ -80,7 +79,7 @@ class NoticeControllerTest extends ControllerSupportTest {
     MockMultipartFile mockFile3 = new MockMultipartFile("multipartFiles", "File_3.txt", MediaType.TEXT_PLAIN_VALUE,
         "File 3".getBytes());
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(fileUpload("/notices")
         .file(mockFile1)
         .file(mockFile2)
@@ -89,7 +88,7 @@ class NoticeControllerTest extends ControllerSupportTest {
         .params(params)
         .accept(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-add",
@@ -104,15 +103,14 @@ class NoticeControllerTest extends ControllerSupportTest {
             requestParts(
                 partWithName("multipartFiles").description("업로드파일[]").optional()
             ),
-            responseFields(RestDocs.noticeFindResponseDescriptor)
+            responseFields(RestDocs.noticeResponseDescriptor)
         ));
   }
 
   @Test
   @DisplayName("공지사항 수정(B02)")
   void updateNotice() throws Exception {
-
-    // GIVEN
+    // given
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("title", "Update Title");
     params.add("content", "Update Content");
@@ -120,14 +118,14 @@ class NoticeControllerTest extends ControllerSupportTest {
     MockMultipartFile mockFile = new MockMultipartFile("multipartFiles", "SAMPLE.txt", MediaType.TEXT_PLAIN_VALUE,
         "SAMPLE".getBytes());
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(fileUpload("/notices/{noticeId}", GIVEN_NOTICE_ID)
         .file(mockFile)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .params(params)
         .accept(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-update",
@@ -142,24 +140,23 @@ class NoticeControllerTest extends ControllerSupportTest {
             requestParts(
                 partWithName("multipartFiles").description("업로드파일[]").optional()
             ),
-            responseFields(RestDocs.noticeFindResponseDescriptor)
+            responseFields(RestDocs.noticeResponseDescriptor)
         ));
   }
 
   @Test
   @DisplayName("공지사항 상세 조회(B03)")
   void findNotice() throws Exception {
-
-    // GIVEN
+    // given
     String noticeId = addSampleNotice(GIVEN_USER_ID);
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(get("/notices/{noticeId}", noticeId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-find",
@@ -170,15 +167,14 @@ class NoticeControllerTest extends ControllerSupportTest {
             pathParameters(
                 parameterWithName("noticeId").description("공지사항 ID")
             ),
-            responseFields(RestDocs.noticeFindResponseDescriptor)
+            responseFields(RestDocs.noticeResponseDescriptor)
         ));
   }
 
   @Test
   @DisplayName("공지사항 조회(B04)")
   void findNotices() throws Exception {
-
-    // GIVEN
+    // given
     User user = getSampleUser();
 
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -192,14 +188,14 @@ class NoticeControllerTest extends ControllerSupportTest {
       Thread.sleep(1);
     }
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(get("/notices")
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .queryParams(params)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-all-find",
@@ -234,17 +230,16 @@ class NoticeControllerTest extends ControllerSupportTest {
   @Test
   @DisplayName("공지사항 삭제(B05)")
   void deleteNotice() throws Exception {
-
-    // GIVEN
+    // given
     User user = getSampleUser();
     String noticeId = addSampleNotice(user.getId());
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(delete("/notices/{noticeId}", noticeId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-delete",
@@ -265,20 +260,19 @@ class NoticeControllerTest extends ControllerSupportTest {
   @Test
   @DisplayName("공지사항 첨부파일 다운로드(B06)")
   void downloadAttachment() throws Exception {
-
-    // GIVEN
+    // given
     User user = getSampleUser();
     String noticeId = addSampleNotice(user.getId());
 
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(get("/notices/{noticeId}/attachments/{attachmentId}", noticeId, attachmentId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     MvcResult mvcResult = result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-attachment-download",
@@ -303,20 +297,19 @@ class NoticeControllerTest extends ControllerSupportTest {
   @Test
   @DisplayName("공지사항 첨부파일 삭제(B07)")
   void deleteAttachment() throws Exception {
-
-    // GIVEN
+    // given
     User user = getSampleUser();
     String noticeId = addSampleNotice(user.getId());
 
     NoticeResponseVO notice = noticeService.findNotice(noticeId, false);
     String attachmentId = notice.getFiles().get(0).getId();
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(delete("/notices/{noticeId}/attachments/{attachmentId}", noticeId, attachmentId)
         .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("notice-attachment-delete",

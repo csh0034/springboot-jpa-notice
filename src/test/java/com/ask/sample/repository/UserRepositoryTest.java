@@ -24,13 +24,13 @@ class UserRepositoryTest {
 
   @Test
   void saveUser() {
-    // GIVEN
+    // given
     User user = User.create("user01@rsupport.com", SecurityUtils.passwordEncode("password1"), Role.ROLE_USER, "userNm1");
 
-    // WHEN
+    // when
     User createUser = userRepository.save(user);
 
-    // THEN
+    // then
     em.flush();
     assertThat(createUser.getId()).isNotNull();
     assertThat(user).isEqualTo(createUser);

@@ -24,23 +24,22 @@ public class SecurityFilterTest extends ControllerSupportTest {
   @Test
   @DisplayName("유저 로그인(A01)")
   void userLogin() throws Exception {
-
-    // GIVEN
+    // given
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add(Constants.EMAIL_PARAMETER, GIVEN_EMAIL);
     params.add(Constants.PASSWORD_PARAMETER, GIVEN_PASSWORD);
 
-    // WHEN
+    // when
     ResultActions result = mvc.perform(post("/login")
         .params(params)
         .accept(MediaType.APPLICATION_JSON));
 
-    // THEN
+    // then
     result.andExpect(status().isOk())
         .andDo(print())
         .andDo(document("user-login",
             requestParameters(
-                parameterWithName(Constants.EMAIL_PARAMETER).description("로그인 ID")
+                parameterWithName(Constants.EMAIL_PARAMETER).description("이메일")
                     .attributes(new Attributes.Attribute("validation", "NotBlank")),
                 parameterWithName(Constants.PASSWORD_PARAMETER).description("패스워드")
                     .attributes(new Attributes.Attribute("validation", "NotBlank"))
