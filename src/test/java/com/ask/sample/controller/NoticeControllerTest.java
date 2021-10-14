@@ -133,6 +133,9 @@ class NoticeControllerTest extends ControllerSupportTest {
                 headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.MULTIPART_FORM_DATA),
                 headerWithName(HttpHeaders.AUTHORIZATION).description("Access Token (JWT)")
             ),
+            pathParameters(
+                parameterWithName("noticeId").description("공지사항 ID")
+            ),
             requestParameters(
                 parameterWithName("title").description("제목").attributes(new Attribute("validation", "NotBlank")),
                 parameterWithName("content").description("내용").attributes(new Attribute("validation", "NotBlank"))
