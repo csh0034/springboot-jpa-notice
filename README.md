@@ -1,10 +1,12 @@
-# spring boot + jpa + security
+# spring boot + jpa + security + restdocs
 공지사항 웹 어플리케이션
 
 ## 개발 환경
 ![Generic badge](https://img.shields.io/badge/spring--boot-2.5.5-brightgreen.svg)
-![Generic badge](https://img.shields.io/badge/spring--data--jpa-2.5.5-blueviolet.svg)
-![Generic badge](https://img.shields.io/badge/querydsl-4.4.0-bbd.svg)  
+![Generic badge](https://img.shields.io/badge/hibernate-5.4.32--final-blueviolet.svg)
+![Generic badge](https://img.shields.io/badge/querydsl-4.4.0-bbd.svg)
+![Generic badge](https://img.shields.io/badge/restdocs-2.0.5-white.svg)
+
 ![Generic badge](https://img.shields.io/badge/h2-1.4.200-blue.svg)
 ![Generic badge](https://img.shields.io/badge/jdk-11-orange.svg)
 ![Generic badge](https://img.shields.io/badge/Gradle-7.1.1-yellowgreen.svg)
@@ -16,8 +18,8 @@
 - 사용자는 공지 목록을 조회할 수 있다.
 - 조회시 제목, 작성일, 작성자, 최종 수정일, 내용이 조회 가능하다.
 - 목록은 페이징 기능이 있다.
-- 공지 등록시 여러개의 첨부 파일을 등록할 수 있다 (선택)
-- 로그인 기능(선택)
+- 공지 등록시 여러개의 첨부 파일을 등록할 수 있다.
+- 로그인 기능.
 
 
 ## 실행 방법
